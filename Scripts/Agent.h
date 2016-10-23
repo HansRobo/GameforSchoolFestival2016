@@ -133,7 +133,7 @@ public:
 		type = -1;
 		num = -1;
 		pos = VGet(0.0f, 0.0f);
-		is_valid = false;
+		//is_valid = false;
 	}
 	void draw(int i, int _pos) {
 		
@@ -157,6 +157,15 @@ public:
 	}
 	void setNum(int _num) {
 		num = _num;
+	}
+	void setType(int _type) {
+		type = _type;
+		if (_type != -1) {
+			is_valid = true;
+		}
+		else {
+			is_valid = false;
+		}
 	}
 	bool is_valid;
 };
@@ -282,9 +291,22 @@ public:
 			}
 		}
 		else {
-			if (!Event.LMouse.GetInput()) {
+			if (!Event.LMouse.GetPreInput()) {
 				selected_type = -1;
 			}
+			else {
+				for (int i = 0; i < action_num; i++) {
+					Vector2D vertex1 = action_array[i].pos;
+					Vector2D vertex2 = action_array[i].pos + action_array[i].size;
+					if (Event.LMouse.GetRelease(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
+						
+						action_array[i].setType(selected_type);
+						selected_type = -1;
+						break;
+					}
+				}
+			}
+
 		}
 	}
 		int selected_type;
