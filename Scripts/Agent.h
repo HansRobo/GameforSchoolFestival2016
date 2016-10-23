@@ -133,11 +133,18 @@ public:
 		type = -1;
 		num = -1;
 		pos = VGet(0.0f, 0.0f);
+		is_valid = false;
 	}
 	void draw(int i, int _pos) {
+		
 		DrawBox(pos.x, pos.y, pos.x + size.x, pos.y + size.y, GetColor(128, 128, 255), false);
-		DrawCenterString(pos.x + size.x / 2.0f, pos.y + 20.0f, YELLOW, "%d", i);
-		DrawCenterString(pos.x + size.x / 2.0f, pos.y + 120.0f, YELLOW, "%d", _pos);
+		if (is_valid) {
+			DrawCenterString(pos.x + size.x / 2.0f, pos.y + 20.0f, YELLOW, "%d", type);
+			DrawCenterString(pos.x + size.x / 2.0f, pos.y + 120.0f, YELLOW, "%d", _pos);
+		}
+	}
+	void reset() {
+		is_valid = false;
 	}
 	int type;
 	Vector2D pos;
@@ -151,6 +158,7 @@ public:
 	void setNum(int _num) {
 		num = _num;
 	}
+	bool is_valid;
 };
 
 class MeManager {
@@ -255,6 +263,31 @@ public:
 
 		}
 	}
+
+	void selectType() {
+		Vector2D size = VGet(60.0f,60.0f);
+		int space = 80;
+		Vector2D left_top = VGet(400,400);
+
+		for (int i = 0; i < ACTION_NUM;i++) {
+			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
+		}
+		debug.Print("type : %d",selected_type);
+		if (selected_type == -1) {
+			for (int i = 0; i < ACTION_NUM; i++) {
+				if (Event.LMouse.GetClick(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y)) {
+					selected_type = i;
+					break;
+				}
+			}
+		}
+		else {
+			if (!Event.LMouse.GetInput()) {
+				selected_type = -1;
+			}
+		}
+	}
+		int selected_type;
 	int point;
 	bool is_action_locked[ACTION_NUM];
 	int action_num;

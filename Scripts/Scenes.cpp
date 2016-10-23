@@ -39,11 +39,14 @@ void editMeLoop() {
 	//////////////////////////////////////////////
 
 	debug.Print("select:%d",manager.selected_unit);
+	manager.selectType();
 	manager.sort();
+
 	//draw
 	for (int i = 0; i < manager.action_num;i++) {
 		manager.action_array[i].draw(i,manager.action_array[i].num);
 	}
+
 }
 void upATK() {
 	if(manager.point > 0){
