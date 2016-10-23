@@ -2,7 +2,7 @@
 #include"Suken.h"
 #include"Manager.h"
 using namespace std;
-enum AI_ACTION{
+enum AI_ACTION {
 	GO,
 	BACK,
 	SEARCH,
@@ -14,7 +14,7 @@ enum AI_ACTION{
 };
 class Action {
 public:
-	Action(){
+	Action() {
 		action_mode = -1;
 	}
 	int action_mode;
@@ -37,7 +37,7 @@ public:
 		direction = 0.0f;
 		count = 0;
 	}
-	void setParam(int _action_num,int _hp){
+	void setParam(int _action_num, int _hp) {
 		action_num = _action_num;
 		hp = _hp;
 	}
@@ -49,12 +49,12 @@ public:
 	}
 	Action action[10];
 	void loop() {
-		if (System.GetFrame()% ACTION_INTERVAL == 0 ) {
+		if (System.GetFrame() % ACTION_INTERVAL == 0) {
 			count++;
 			doAction(count);
 		}
-		
-		DrawCircle(pos,20,RED,true);
+
+		DrawCircle(pos, 20, RED, true);
 		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
 	}
 	void doAction(int _count) {
@@ -83,7 +83,7 @@ public:
 			break;
 		default:
 			break;
-		
+
 		}
 	}
 
@@ -94,8 +94,8 @@ public:
 		pos -= VGetRTheta(velocity, direction);
 	}
 	void actionSearch() {
-		Vector2D target =search_target - pos;
-		direction = atan2f(target.y,target.x);
+		Vector2D target = search_target - pos;
+		direction = atan2f(target.y, target.x);
 	}
 	void actionTurnR() {
 		direction -= TURN_RAD;
@@ -109,7 +109,7 @@ public:
 	void actionShoot2() {
 
 	}
-	Vector2D VGetRTheta(float r,float theta) {
+	Vector2D VGetRTheta(float r, float theta) {
 		return VGet(cos(theta), sin(theta))*r;
 	}
 
@@ -127,19 +127,50 @@ public:
 
 };
 
+class ActionUnit {
+public:
+	ActionUnit() {
+		type = -1;
+		num = -1;
+		pos = VGet(0.0f, 0.0f);
+	}
+	void draw(int i, int _pos) {
+		DrawBox(pos.x, pos.y, pos.x + size.x, pos.y + size.y, GetColor(128, 128, 255), false);
+		DrawCenterString(pos.x + size.x / 2.0f, pos.y + 20.0f, YELLOW, "%d", i);
+		DrawCenterString(pos.x + size.x / 2.0f, pos.y + 120.0f, YELLOW, "%d", _pos);
+	}
+	int type;
+	Vector2D pos;
+	const Vector2D size = Vector2D(60.0f, 60.0f);
+	Vector2D anchor = Vector2D(450, 250);
+	const int space = 70;
+	int num;
+	void setPos() {
+		pos = anchor + VGet(num*space, 0);
+	}
+	void setNum(int _num) {
+		num = _num;
+	}
+};
 
 class MeManager {
 public:
 	MeManager() {
-
+		action_num = 0;
+		action_array = nullptr;
+		selected_unit = -1;
 	}
 	void load() {
 		FILE *fp = fopen("Assets_Y68/Data/spec.txt", "r");
 		if (fp != NULL) {
-			int point_temp;
-			fscanf(fp, "%d", &point_temp);
-			point = point_temp;
+			fscanf(fp, "%d", &point);
+			fscanf(fp, "%d", &action_num);
+			action_array = new ActionUnit[action_num];
 
+			for (int i = 0; i < action_num; i++) {
+				action_array[i].setNum(i);
+				action_array[i].setPos();
+			}
 			for (int i = 0; i < ACTION_NUM; i++) {
 				int temp;
 				fscanf(fp, "%d", &temp);
@@ -152,11 +183,83 @@ public:
 			}
 		}
 		else {
-			MessageBox(GetMainWindowHandle(), "ƒf[ƒ^‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½","Œx",MB_OK);
+			MessageBox(GetMainWindowHandle(), "ƒf[ƒ^‚Ì“Ç‚Ýž‚Ý‚ÉŽ¸”s‚µ‚Ü‚µ‚½", "Œx", MB_OK);
 			System.Escape();
 		}
 	}
 
+	void reset() {
+		if (action_array != nullptr) {
+			delete action_array;
+			action_array = nullptr;
+		}
+		action_num = 0;
+		for (int i = 0; i < ACTION_NUM; i++) {
+			is_action_locked[i] = true;
+		}
+		point = 0;
+		selected_unit = -1;
+	}
+	void sort() {
+		if (selected_unit == -1) {
+			for (int i = 0; i < action_num; i++) {
+				Vector2D vertex1 = action_array[i].pos;
+				Vector2D vertex2 = action_array[i].pos + action_array[i].size;
+				if (Event.LMouse.GetClick(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
+					selected_unit = i;
+					break;
+				}
+			}
+		}
+		else {
+			Vector2D vertex1 = action_array[selected_unit].pos;
+			Vector2D vertex2 = action_array[selected_unit].pos + action_array[selected_unit].size;
+
+			if (Event.LMouse.GetInput()) {
+
+
+				int distance = 1000;
+				int nearest = -1;
+				for (int i = 0; i < action_num; i++) {
+					int center = action_array[0].anchor.x + i*action_array[0].space + action_array[0].size.x / 2;
+					if (distance > abs(Event.LMouse.GetX() - center)) {
+						distance = abs(Event.LMouse.GetX() - center);
+						nearest = i;
+					}
+				}
+				debug.Print("nearest:%d", nearest);
+				if (nearest != action_array[selected_unit].num && nearest != -1) {
+					for (int i = 0; i < action_num; i++) {
+						if (action_array[i].num == nearest) {
+							int temp = action_array[i].num;
+							action_array[i].setNum(action_array[selected_unit].num);
+							action_array[i].setPos();
+							action_array[selected_unit].setNum(temp);
+
+						}
+					}
+
+				}
+
+				action_array[selected_unit].pos = VGet(Event.LMouse.GetX() - action_array[0].size.x / 2, Event.LMouse.GetY() - action_array[0].size.x / 2);
+			}
+			else {
+				for (int i = 0; i < action_num; i++) {
+					action_array[i].setPos();
+				}
+				selected_unit = -1;
+
+				debug.Print("EXIT!");
+			}
+
+
+		}
+	}
 	int point;
 	bool is_action_locked[ACTION_NUM];
+	int action_num;
+	int selected_unit;
+	ActionUnit *action_array;
+
+
 };

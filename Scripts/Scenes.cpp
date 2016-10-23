@@ -8,14 +8,14 @@ void gameMainLoop() {
 
 
 void editMeLoop() {
-	DrawFormatString(70, 50, YELLOW, "未使用ポイント : %d", manager.point);
-	DrawFormatString(110,100,WHITE,"ATK : %d",stage.stage[stage.current_stage].me.attack_point);
-	DrawFormatString(110, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage].me.speed_point);
-	DrawFormatString(110, 180, WHITE, "HP : %d", stage.stage[stage.current_stage].me.hp_point);
+	DrawFormatString(120, 50, YELLOW, "未使用ポイント : %d", manager.point);
+	DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage].me.attack_point);
+	DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage].me.speed_point);
+	DrawFormatString(160, 180, WHITE, "HP : %d", stage.stage[stage.current_stage].me.hp_point);
 
-	float scale = 30.0f;
+	float scale = 15.0f;
 	Vector2D atk, spd, hp,center;
-	center = VGet(550, 350);
+	center = VGet(200, 400);
 	atk = spd = hp = center;
 	atk += VGet(0.0f, -1.0f)*stage.stage[stage.current_stage].me.attack_point*scale;
 	spd += VGet(0.866f, 0.5f)*stage.stage[stage.current_stage].me.speed_point*scale;
@@ -29,9 +29,21 @@ void editMeLoop() {
 	DrawLine(hp, spd, YELLOW);
 	DrawLine(atk, hp, YELLOW);
 
-	DrawCircle(atk,10,YELLOW,true);
-	DrawCircle(spd, 10, YELLOW, true);
-	DrawCircle(hp, 10, YELLOW, true);
+	DrawCircle(atk,3,YELLOW,true);
+	DrawCircle(spd, 3, YELLOW, true);
+	DrawCircle(hp, 3, YELLOW, true);
+
+
+
+
+	//////////////////////////////////////////////
+
+	debug.Print("select:%d",manager.selected_unit);
+	manager.sort();
+	//draw
+	for (int i = 0; i < manager.action_num;i++) {
+		manager.action_array[i].draw(i,manager.action_array[i].num);
+	}
 }
 void upATK() {
 	if(manager.point > 0){

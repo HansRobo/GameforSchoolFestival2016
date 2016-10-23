@@ -6,6 +6,7 @@
 
 #define TURN_RAD (1.57f)
 
+
 class Stage;
 class StageManager;
 class Agent;
