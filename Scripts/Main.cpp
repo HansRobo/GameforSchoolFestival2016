@@ -22,7 +22,7 @@ void suken::Awake(){
 	stage_select.input.AddEventListener(Event.key.RETURN, &edit_me);
 
 	edit_me.input.AddEventListener(Event.EVERY_FRAME, editMeLoop);
-	edit_me.SetButton( 500, 500, 700, 550, GetColor(128, 255, 128), "GAME START", BLACK, &game_main);
+	edit_me.SetButton( 500, 500, 700, 550, GetColor(128, 255, 128), "GAME START", BLACK, gameStart);
 	//edit_me.input.AddEventListener(Event.key.RETURN, &game_main);
 
 	int x_1 = 250;

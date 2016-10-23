@@ -12,12 +12,14 @@ enum AI_ACTION {
 	SHOOT_2,
 	ACTION_NUM
 };
+
 class Action {
 public:
 	Action() {
 		action_mode = -1;
 	}
 	int action_mode;
+	static char str[ACTION_NUM][10];
 };
 
 class Agent {
@@ -133,14 +135,19 @@ public:
 		type = -1;
 		num = -1;
 		pos = VGet(0.0f, 0.0f);
-		//is_valid = false;
+		is_valid = false;
 	}
 	void draw(int i, int _pos) {
 		
 		DrawBox(pos.x, pos.y, pos.x + size.x, pos.y + size.y, GetColor(128, 128, 255), false);
+		//for (int i = 0; i < 30;i++) {
+		//	DrawBox(pos.x+i, pos.y+i, pos.x + size.x-i, pos.y + size.y-i, GetColor(255.0f*((float)i/30.0f) , 255.0f*((float)i / 30.0f), 255), false);
+		//}
 		if (is_valid) {
-			DrawCenterString(pos.x + size.x / 2.0f, pos.y + 20.0f, YELLOW, "%d", type);
-			DrawCenterString(pos.x + size.x / 2.0f, pos.y + 120.0f, YELLOW, "%d", _pos);
+			const TCHAR *sss = Action::str[type];
+			//DrawCenterString((int)(pos.x + size.x / 2.0f),(int)( pos.y + 20.0f), (int)GetColor(255,255,0), "%s", sss);
+			DxLib::DrawString((int)(pos.x + size.x / 2.0f) - GetDrawStringWidth(sss, strlen(sss)) / 2, (int)(pos.y + 20.0f), sss, YELLOW);
+			DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
 		}
 	}
 	void reset() {
@@ -271,20 +278,34 @@ public:
 
 
 		}
+		for (int i = 0; i < action_num; i++) {
+			Vector2D vertex1 = action_array[i].pos;
+			Vector2D vertex2 = action_array[i].pos + action_array[i].size;
+			if (Event.RMouse.GetClick(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
+				action_array[i].reset();
+				break;
+			}
+		}
 	}
 
 	void selectType() {
-		Vector2D size = VGet(60.0f,60.0f);
-		int space = 80;
-		Vector2D left_top = VGet(400,400);
+		debug.Print("黄色いボタンを");
+		debug.Print("青い四角へ");
+		debug.Print("ドラッグ＆ドロップ");
+		debug.Print("してください");
+		Vector2D size = VGet(50.0f,50.0f);
+		int space = 60;
+		Vector2D left_top = VGet(380,400);
 
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
+			DxLib::DrawString(left_top.x + space*i + size.x/2.0f - GetDrawStringWidth(Action::str[i], strlen(Action::str[i])) / 2, left_top.y + size.y / 2.0f -10.0f, Action::str[i], YELLOW);
+			
 		}
 		debug.Print("type : %d",selected_type);
 		if (selected_type == -1) {
 			for (int i = 0; i < ACTION_NUM; i++) {
-				if (Event.LMouse.GetClick(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y)) {
+				if (Event.LMouse.GetClick(left_top.x + space*i, left_top.y  , left_top.x + space*i + size.x, left_top.y + size.y)) {
 					selected_type = i;
 					break;
 				}
@@ -308,6 +329,7 @@ public:
 			}
 
 		}
+		
 	}
 		int selected_type;
 	int point;

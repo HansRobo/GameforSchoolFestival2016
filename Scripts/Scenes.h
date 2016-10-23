@@ -17,3 +17,5 @@ void reload();
 
 void titleLoop();
 void stageSelectLoop();
+
+void gameStart();

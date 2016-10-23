@@ -1,5 +1,14 @@
 #include"Scenes.h"
 
+char Action::str[ACTION_NUM][10] = {
+	"íºêi",
+	"å„êi",
+	"íTçı",
+	"âEê‹",
+	"ç∂ê‹",
+	"íeàÎ",
+	"íeìÛ",
+};
 void gameMainLoop() {
 	stage.stage[stage.current_stage].loop();
 	DrawCircle(stage.stage[0].me.pos, 30, YELLOW, false);
@@ -96,4 +105,24 @@ void titleLoop() {
 
 void stageSelectLoop() {
 
+}
+
+void gameStart() {
+	int front_num = 0;
+	for (int i = 0; i < manager.action_num;i++) {
+		for (int j = 0; j < manager.action_num;j++) {
+			if(manager.action_array[j].num == i){
+				if (manager.action_array[j].is_valid && manager.action_array[j].type != -1) {
+					stage.stage[stage.current_stage].me.action[front_num].action_mode = manager.action_array[j].type;
+					front_num++;
+					break;
+				}
+			}
+		}
+	}
+	stage.stage[stage.current_stage].me.setActionNum(front_num);
+
+
+
+	Game.AddChild(&game_main);
 }
