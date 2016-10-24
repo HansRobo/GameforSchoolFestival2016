@@ -2,7 +2,7 @@
 #include"Stage.h"
 #include"Scenes.h"
 #include"Alert.h"
-int font_l;
+int font_l,font_m;
 
 StageManager stage;
 CScene title,game_main,edit_me,stage_select,alert;
@@ -12,6 +12,7 @@ MeManager manager;
 void suken::Awake(){
 	AddFontFromPath("Assets_Y68/Fonts/AozoraMinchoHeavy.ttf");
 	font_l = CreateFontToHandle("‚ ‚¨‚¼‚ç–¾’© Heavy",48,-1, DX_FONTTYPE_ANTIALIASING_4X4);
+	font_m = CreateFontToHandle("‚ ‚¨‚¼‚ç–¾’© Heavy", 20, -1, DX_FONTTYPE_ANTIALIASING_4X4);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_8X8);
 	stage.load();
 	manager.load();

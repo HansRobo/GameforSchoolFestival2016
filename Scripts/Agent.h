@@ -146,7 +146,7 @@ public:
 		if (is_valid) {
 			const TCHAR *sss = Action::str[type];
 			//DrawCenterString((int)(pos.x + size.x / 2.0f),(int)( pos.y + 20.0f), (int)GetColor(255,255,0), "%s", sss);
-			DxLib::DrawString((int)(pos.x + size.x / 2.0f) - GetDrawStringWidth(sss, strlen(sss)) / 2, (int)(pos.y + 20.0f), sss, YELLOW);
+			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle(sss, strlen(sss),font_m) / 2, (int)(pos.y +  DxLib::GetFontSizeToHandle(font_m) / 2), sss, YELLOW,font_m);
 			DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
 		}
 	}
@@ -155,9 +155,9 @@ public:
 	}
 	int type;
 	Vector2D pos;
-	const Vector2D size = Vector2D(60.0f, 60.0f);
+	const Vector2D size = Vector2D(50.0f, 50.0f);
 	Vector2D anchor = Vector2D(450, 250);
-	const int space = 70;
+	const int space = 60;
 	int num;
 	void setPos() {
 		pos = anchor + VGet(num*space, 0);
@@ -299,7 +299,7 @@ public:
 
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
-			DxLib::DrawString(left_top.x + space*i + size.x/2.0f - GetDrawStringWidth(Action::str[i], strlen(Action::str[i])) / 2, left_top.y + size.y / 2.0f -10.0f, Action::str[i], YELLOW);
+			DxLib::DrawStringToHandle(left_top.x + space*i + size.x/2.0f - GetDrawStringWidthToHandle(Action::str[i], strlen(Action::str[i]),font_m) / 2, left_top.y + size.y / 2.0f - GetFontSizeToHandle(font_m)/2, Action::str[i], YELLOW,font_m);
 			if (is_action_locked[i]) {
 				DrawLineAA(left_top.x + space*i, left_top.y, left_top.x + size.x + space*i, left_top.y + size.y, RED, 5.0f);
 				DrawLineAA(left_top.x + space*i, left_top.y + size.y, left_top.x + size.x + space*i, left_top.y, RED, 5.0f);

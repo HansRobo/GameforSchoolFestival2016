@@ -1,5 +1,5 @@
 #include"Scenes.h"
-
+#include"Alert.h"
 char Action::str[ACTION_NUM][10] = {
 	"直進",
 	"後進",
@@ -196,8 +196,15 @@ void gameStart() {
 	stage.stage[stage.current_stage].me.setActionNum(front_num);
 
 
-
-	Game.AddChild(&game_main);
+	if (front_num == 0) {
+		stage.load();
+		sprintf(sk_alert.str,"コマンドが空です。最低１つは指定してください");
+		sk_alert.count = 60;
+		sk_alert.message();
+	}
+	else {
+		Game.AddChild(&game_main);
+	}
 }
 
 void editStart() {

@@ -17,4 +17,4 @@ extern StageManager stage;
 extern CScene title, game_main, edit_me,alert;
 extern MeManager manager;
 
-extern int font_l;
+extern int font_l,font_m;
