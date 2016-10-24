@@ -146,7 +146,7 @@ public:
 		if (is_valid) {
 			const TCHAR *sss = Action::str[type];
 			//DrawCenterString((int)(pos.x + size.x / 2.0f),(int)( pos.y + 20.0f), (int)GetColor(255,255,0), "%s", sss);
-			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle(sss, strlen(sss),font_m) / 2, (int)(pos.y +  DxLib::GetFontSizeToHandle(font_m) / 2), sss, YELLOW,font_m);
+			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle(sss, strlen(sss),font_m) / 2, (int)(pos.y +size.y/2 -  DxLib::GetFontSizeToHandle(font_m) / 2), sss, YELLOW,font_m);
 			DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
 		}
 	}
@@ -317,6 +317,9 @@ public:
 			}
 		}
 		else {
+			
+			DrawBox(Event.LMouse.GetX()-size.x/2, Event.LMouse.GetY() - size.y / 2, Event.LMouse.GetX() + size.x / 2, Event.LMouse.GetY() + size.y / 2,YELLOW,false);
+			DxLib::DrawStringToHandle(Event.LMouse.GetX() - GetDrawStringWidthToHandle(Action::str[selected_type], strlen(Action::str[selected_type]), font_m) / 2, Event.LMouse.GetY() - GetFontSizeToHandle(font_m) / 2, Action::str[selected_type], YELLOW, font_m);
 			if (!Event.LMouse.GetPreInput()) {
 				selected_type = -1;
 			}
