@@ -34,7 +34,7 @@ private:
 public:
 	Agent() {
 		action_front = 0;
-		velocity = 100.0f;
+		velocity = VELOCITY;
 		pos = VGet(200, 200);
 		direction = 0.0f;
 		count = 0;
@@ -300,14 +300,19 @@ public:
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
 			DxLib::DrawString(left_top.x + space*i + size.x/2.0f - GetDrawStringWidth(Action::str[i], strlen(Action::str[i])) / 2, left_top.y + size.y / 2.0f -10.0f, Action::str[i], YELLOW);
-			
+			if (is_action_locked[i]) {
+				DrawLineAA(left_top.x + space*i, left_top.y, left_top.x + size.x + space*i, left_top.y + size.y, RED, 5.0f);
+				DrawLineAA(left_top.x + space*i, left_top.y + size.y, left_top.x + size.x + space*i, left_top.y, RED, 5.0f);
+			}
 		}
 		debug.Print("type : %d",selected_type);
 		if (selected_type == -1) {
 			for (int i = 0; i < ACTION_NUM; i++) {
-				if (Event.LMouse.GetClick(left_top.x + space*i, left_top.y  , left_top.x + space*i + size.x, left_top.y + size.y)) {
-					selected_type = i;
-					break;
+				if (!is_action_locked[i]){
+					if (Event.LMouse.GetClick(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y)) {
+						selected_type = i;
+						break;
+					}
 				}
 			}
 		}

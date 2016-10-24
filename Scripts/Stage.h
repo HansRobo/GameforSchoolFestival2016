@@ -90,7 +90,7 @@ public:
 	int current_stage;
 	int transition_mode;
 	int count;
-	const int animation_time = 15;
+	const int animation_time = 20;
 	float base_rad;
 };
 

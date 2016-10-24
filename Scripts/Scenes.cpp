@@ -17,6 +17,8 @@ void gameMainLoop() {
 
 
 void editMeLoop() {
+
+	debug.Print("stage:%d", stage.current_stage);
 	DrawFormatString(120, 50, YELLOW, "未使用ポイント : %d", manager.point);
 	DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage].me.attack_point);
 	DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage].me.speed_point);
@@ -100,10 +102,24 @@ void reload() {
 
 
 void titleLoop() {
-
+	//DrawBox(0, 0, 900, 600, WHITE, true);
+	int unit = 30;
+	
+	for (int i = 0; i <= 900 / unit;i++) {
+		
+		for (int j = 0; j <= 600 / unit;j++) {
+			float r = 5.0f + 4.7f*sin((float)(System.GetFrame() + ((i + j) * 8)) / 40.0f);
+			DrawCircleAA(unit*i, unit*j ,r,100, GetColor(128, 128, 128), true);
+		}
+	}
+	if (Event.key.GetDown(Event.key.RETURN)) {
+		
+	}
 }
 
+
 void stageSelectLoop() {
+	int wheel_rot = GetMouseWheelRotVol();
 	debug.Print("stage:%d", stage.current_stage);
 	float d_rad = (0.3f/(float)stage.animation_time)-(0.3f/(float)stage.animation_time)*abs((float)stage.count-(float)(stage.animation_time/2.0f))/ (float)(stage.animation_time / 2.0f);
 	if (stage.transition_mode == 1) {
@@ -125,14 +141,13 @@ void stageSelectLoop() {
 		}
 	}
 	else {
-		if (Event.key.GetDown(Event.key.UP)) {
+		if (Event.key.GetPush(Event.key.UP)|| wheel_rot > 0 ) {
 			if (stage.current_stage + 1 < STAGE_NUM) {
 				stage.current_stage++;
 				stage.transition_mode = 2;
 				stage.count = 0;
 			}
-		}
-		if (Event.key.GetDown(Event.key.DOWN)) {
+		}else if (Event.key.GetPush(Event.key.DOWN) || wheel_rot < 0 ) {
 			if (stage.current_stage - 1 >= 0) {
 				stage.current_stage--;
 				stage.transition_mode = 1;
@@ -151,16 +166,18 @@ void stageSelectLoop() {
 		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 50 * powf(((1.57f - abs(rad)) / 1.57f),1.5f), 100, WHITE, true);
 		DrawFormatStringToHandle(c.x + 990.0f*cos(rad) + 100, c.y + 990.0f*sin(rad) - 20, GetColor(255, 255, 255), font_l, "STAGE %d", i + 1);
 	}
-	if (stage.transition_mode == 0) {
-		DrawLineAA(250,530,290,560,GetColor(255,255,255),3.0f);
-		DrawLineAA(290, 560,500,560, GetColor(255, 255, 255), 3.0f);
-		DrawLineAA(275, 550, 490, 550, GetColor(255, 255, 255), 3.0f);
+	//if (stage.transition_mode == 0) {
+		int brightness = (int)( (255.0f)*powf(abs((float)stage.count - (float)(stage.animation_time / 2.0f)) / (float)(stage.animation_time / 2.0f),2.0f));
+		int col = GetColor(brightness,brightness,brightness);
+		DrawLineAA(250,530,290,560,col,3.0f);
+		DrawLineAA(290, 560,500,560, col, 3.0f);
+		DrawLineAA(275, 550, 490, 550, col, 3.0f);
 
-		DrawLineAA(500, 480, 550, 530, GetColor(255, 255, 255), 3.0f);
-		DrawLineAA(270, 480, 500, 480, GetColor(255, 255, 255), 3.0f);
+		DrawLineAA(500, 480, 550, 530, col, 3.0f);
+		DrawLineAA(270, 480, 500, 480, col, 3.0f);
 		
 
-	}
+	//}
 }
 
 void gameStart() {
@@ -181,4 +198,13 @@ void gameStart() {
 
 
 	Game.AddChild(&game_main);
+}
+
+void editStart() {
+	manager.reset();
+	
+	manager.load();
+	manager.action_num = stage.stage[stage.current_stage].max_action_num;
+	
+	Game.AddChild(&edit_me);
 }

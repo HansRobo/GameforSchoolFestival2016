@@ -1,10 +1,11 @@
 #include "Suken.h"
 #include"Stage.h"
 #include"Scenes.h"
+#include"Alert.h"
 int font_l;
 
 StageManager stage;
-CScene title,game_main,edit_me,stage_select;
+CScene title,game_main,edit_me,stage_select,alert;
 MeManager manager;
 
 
@@ -15,13 +16,15 @@ void suken::Awake(){
 	stage.load();
 	manager.load();
 	
+	alert.input.AddEventListener(Event.EVERY_FRAME,alertLoop);
+
 	title.input.AddEventListener(Event.EVERY_FRAME, titleLoop);
 	title.SetButton(System.GetWindowX()/2-100,400,System.GetWindowX()/2+100,450,GetColor(128,255,128),"SELECT STAGE",BLACK,&stage_select);
 	title.input.AddEventListener(Event.key.RETURN,&stage_select);
 
 	stage_select.input.AddEventListener(Event.EVERY_FRAME, stageSelectLoop);
-	stage_select.SetButton(System.GetWindowX() / 2 + 100, 450, System.GetWindowX() / 2 + 300, 500, GetColor(128, 255, 128), "SELECT STAGE", BLACK, &edit_me);
-	stage_select.input.AddEventListener(Event.key.RETURN, &edit_me);
+	stage_select.SetButton(System.GetWindowX() / 2 + 100, 450, System.GetWindowX() / 2 + 300, 500, GetColor(128, 255, 128), "SELECT STAGE", BLACK, editStart);
+	stage_select.input.AddEventListener(Event.key.RETURN, editStart);
 
 	edit_me.input.AddEventListener(Event.EVERY_FRAME, editMeLoop);
 	edit_me.SetButton( 500, 500, 700, 550, GetColor(128, 255, 128), "GAME START", BLACK, gameStart);
