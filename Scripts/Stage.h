@@ -12,7 +12,6 @@ public:
 		sprintf(file_name,"Assets_Y68/Data/stage%d.txt",stage_num);
 		FILE *fp = fopen(file_name, "r");
 		if (fp != NULL) {
-			int max_action_num;
 			fscanf(fp, "%d", &max_action_num);
 			me.setActionNum(max_action_num);
 
@@ -70,6 +69,7 @@ public:
 		}
 		return nearest;
 	}
+	int max_action_num;
 	Agent me;
 	vector<Agent> enemy;
 };
@@ -77,13 +77,26 @@ public:
 class StageManager {
 public:
 	StageManager() {
-
+		base_rad = 0.05f;
 	}
 	void load() {
 		for (int i = 0; i < STAGE_NUM;i++) {
 			stage[i].load(i+1);
 		}
+		base_rad = 0.05f;
+		transition_mode = 0;
 	}
 	Stage stage[STAGE_NUM];
 	int current_stage;
+	int transition_mode;
+	int count;
+	const int animation_time = 15;
+	float base_rad;
+};
+
+class StageSelectManager {
+public:
+	StageSelectManager() {
+
+	}
 };

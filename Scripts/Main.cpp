@@ -1,7 +1,7 @@
 #include "Suken.h"
 #include"Stage.h"
 #include"Scenes.h"
-
+int font_l;
 
 StageManager stage;
 CScene title,game_main,edit_me,stage_select;
@@ -9,6 +9,8 @@ MeManager manager;
 
 
 void suken::Awake(){
+	AddFontFromPath("Assets_Y68/Fonts/AozoraMinchoHeavy.ttf");
+	font_l = CreateFontToHandle("‚ ‚¨‚¼‚ç–¾’© Heavy",48,-1, DX_FONTTYPE_ANTIALIASING_4X4);
 	ChangeFontType(DX_FONTTYPE_ANTIALIASING_8X8);
 	stage.load();
 	manager.load();
@@ -18,7 +20,7 @@ void suken::Awake(){
 	title.input.AddEventListener(Event.key.RETURN,&stage_select);
 
 	stage_select.input.AddEventListener(Event.EVERY_FRAME, stageSelectLoop);
-	stage_select.SetButton(System.GetWindowX() / 2 - 100, 400, System.GetWindowX() / 2 + 100, 450, GetColor(128, 255, 128), "SELECT STAGE", BLACK, &edit_me);
+	stage_select.SetButton(System.GetWindowX() / 2 + 100, 450, System.GetWindowX() / 2 + 300, 500, GetColor(128, 255, 128), "SELECT STAGE", BLACK, &edit_me);
 	stage_select.input.AddEventListener(Event.key.RETURN, &edit_me);
 
 	edit_me.input.AddEventListener(Event.EVERY_FRAME, editMeLoop);

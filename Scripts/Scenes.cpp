@@ -104,7 +104,63 @@ void titleLoop() {
 }
 
 void stageSelectLoop() {
+	debug.Print("stage:%d", stage.current_stage);
+	float d_rad = (0.3f/(float)stage.animation_time)-(0.3f/(float)stage.animation_time)*abs((float)stage.count-(float)(stage.animation_time/2.0f))/ (float)(stage.animation_time / 2.0f);
+	if (stage.transition_mode == 1) {
+		if (stage.animation_time <= stage.count) {
+			stage.transition_mode = 0;
+		}
+		else {
+			stage.base_rad += d_rad;
+			stage.count++;
+		}
+	}
+	else if (stage.transition_mode == 2) {
+		if (stage.animation_time <= stage.count) {
+			stage.transition_mode = 0;
+		}
+		else {
+			stage.base_rad -= d_rad;
+			stage.count++;
+		}
+	}
+	else {
+		if (Event.key.GetDown(Event.key.UP)) {
+			if (stage.current_stage + 1 < STAGE_NUM) {
+				stage.current_stage++;
+				stage.transition_mode = 2;
+				stage.count = 0;
+			}
+		}
+		if (Event.key.GetDown(Event.key.DOWN)) {
+			if (stage.current_stage - 1 >= 0) {
+				stage.current_stage--;
+				stage.transition_mode = 1;
+				stage.count = 0;
+			}
+		}
+	}
+	DrawCircleAA(-800,600,1030,100,GetColor(255,255,55),true);
+	DrawCircleAA(-800, 530, 950, 100, GetColor(0,0, 0), true);
+	Vector2D c = VGet(-800,565);
+	debug.Print("base:%f",stage.base_rad);
+	for (int i = 0; i < STAGE_NUM;i++) {
+		float rad = -(i)*0.15f - stage.base_rad;
+		DrawCircleAA(c.x + 990.0f*cos(rad),c.y + 990.0f*sin(rad),60*powf(((1.57f - abs(rad))/1.57f),1.5f),100,YELLOW,true);
+		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 52 * powf(((1.57f - abs(rad)) / 1.57f),1.5f), 100, BLACK, true);
+		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 50 * powf(((1.57f - abs(rad)) / 1.57f),1.5f), 100, WHITE, true);
+		DrawFormatStringToHandle(c.x + 990.0f*cos(rad) + 100, c.y + 990.0f*sin(rad) - 20, GetColor(255, 255, 255), font_l, "STAGE %d", i + 1);
+	}
+	if (stage.transition_mode == 0) {
+		DrawLineAA(250,530,290,560,GetColor(255,255,255),3.0f);
+		DrawLineAA(290, 560,500,560, GetColor(255, 255, 255), 3.0f);
+		DrawLineAA(275, 550, 490, 550, GetColor(255, 255, 255), 3.0f);
 
+		DrawLineAA(500, 480, 550, 530, GetColor(255, 255, 255), 3.0f);
+		DrawLineAA(270, 480, 500, 480, GetColor(255, 255, 255), 3.0f);
+		
+
+	}
 }
 
 void gameStart() {
