@@ -5,7 +5,7 @@
 int font_l,font_m;
 
 StageManager stage;
-CScene title,game_main,edit_me,stage_select,alert;
+CScene title,game_main,edit_me,stage_select,alert, game_clear, game_over;
 MeManager manager;
 
 

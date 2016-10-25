@@ -45,12 +45,18 @@ public:
 	void actMe() {
 		me.search_target = getNearestEnemyPos(me.pos);
 		me.loop();
+		if (!enemy.empty()) {
+			for (int i = 0;i<enemy.size();i++ ){
+				me.hp -= (me.getDamage(&enemy[i]));
+			}
+		}
 	}
 	void actEnemy() {
 		if(!enemy.empty()){
 			for (int i = 0;i<enemy.size();i++) {
 				enemy[i].search_target = me.pos;
 				enemy[i].loop();
+				enemy[i].hp -= enemy[i].getDamage(&me);
 			}
 		}
 	}
@@ -82,12 +88,13 @@ public:
 	}
 	void load() {
 		for (int i = 0; i < STAGE_NUM;i++) {
-			stage[i].load(i+1);
+			stage[i] = new Stage();
+			stage[i]->load(i+1);
 		}
 		base_rad = 0.05f;
 		transition_mode = 0;
 	}
-	Stage stage[STAGE_NUM];
+	Stage *stage[STAGE_NUM];
 	int current_stage;
 	int transition_mode;
 	int count;

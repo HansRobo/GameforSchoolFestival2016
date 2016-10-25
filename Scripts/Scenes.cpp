@@ -10,8 +10,8 @@ char Action::str[ACTION_NUM][10] = {
 	"弾弐",
 };
 void gameMainLoop() {
-	stage.stage[stage.current_stage].loop();
-	DrawCircle(stage.stage[0].me.pos, 30, YELLOW, false);
+	stage.stage[stage.current_stage]->loop();
+	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);
 
 }
 
@@ -20,17 +20,17 @@ void editMeLoop() {
 
 	debug.Print("stage:%d", stage.current_stage);
 	DrawFormatString(120, 50, YELLOW, "未使用ポイント : %d", manager.point);
-	DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage].me.attack_point);
-	DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage].me.speed_point);
-	DrawFormatString(160, 180, WHITE, "HP : %d", stage.stage[stage.current_stage].me.hp_point);
+	DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage]->me.attack_point);
+	DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage]->me.speed_point);
+	DrawFormatString(160, 180, WHITE, "HP : %d", stage.stage[stage.current_stage]->me.hp_point);
 
 	float scale = 15.0f;
 	Vector2D atk, spd, hp,center;
 	center = VGet(200, 400);
 	atk = spd = hp = center;
-	atk += VGet(0.0f, -1.0f)*stage.stage[stage.current_stage].me.attack_point*scale;
-	spd += VGet(0.866f, 0.5f)*stage.stage[stage.current_stage].me.speed_point*scale;
-	hp += VGet(-0.866f, 0.5f)*stage.stage[stage.current_stage].me.hp_point*scale;
+	atk += VGet(0.0f, -1.0f)*stage.stage[stage.current_stage]->me.attack_point*scale;
+	spd += VGet(0.866f, 0.5f)*stage.stage[stage.current_stage]->me.speed_point*scale;
+	hp += VGet(-0.866f, 0.5f)*stage.stage[stage.current_stage]->me.hp_point*scale;
 
 	DrawLine(center,center+VGet(0,-1)*scale*10,GRAY);
 	DrawLine(center, center + VGet(0.866f, 0.5f)*scale * 10, GRAY);
@@ -62,37 +62,37 @@ void editMeLoop() {
 void upATK() {
 	if(manager.point > 0){
 		manager.point--;
-		stage.stage[stage.current_stage].me.attack_point++;
+		stage.stage[stage.current_stage]->me.attack_point++;
 	}
 }
 void downATK(){
-	if (stage.stage[stage.current_stage].me.attack_point > 0) {
+	if (stage.stage[stage.current_stage]->me.attack_point > 0) {
 		manager.point++;
-		stage.stage[stage.current_stage].me.attack_point--;
+		stage.stage[stage.current_stage]->me.attack_point--;
 	}
 }
 void upSPD() {
 	if (manager.point > 0) {
 		manager.point--;
-		stage.stage[stage.current_stage].me.speed_point++;
+		stage.stage[stage.current_stage]->me.speed_point++;
 	}
 }
 void downSPD() {
-	if (stage.stage[stage.current_stage].me.speed_point > 0) {
+	if (stage.stage[stage.current_stage]->me.speed_point > 0) {
 		manager.point++;
-		stage.stage[stage.current_stage].me.speed_point--;
+		stage.stage[stage.current_stage]->me.speed_point--;
 	}
 }
 void upHP() {
 	if (manager.point > 0) {
 		manager.point--;
-		stage.stage[stage.current_stage].me.hp_point++;
+		stage.stage[stage.current_stage]->me.hp_point++;
 	}
 }
 void downHP() {
-	if (stage.stage[stage.current_stage].me.hp_point > 0) {
+	if (stage.stage[stage.current_stage]->me.hp_point > 0) {
 		manager.point++;
-		stage.stage[stage.current_stage].me.hp_point--;
+		stage.stage[stage.current_stage]->me.hp_point--;
 	}
 }
 
@@ -186,14 +186,14 @@ void gameStart() {
 		for (int j = 0; j < manager.action_num;j++) {
 			if(manager.action_array[j].num == i){
 				if (manager.action_array[j].is_valid && manager.action_array[j].type != -1) {
-					stage.stage[stage.current_stage].me.action[front_num].action_mode = manager.action_array[j].type;
+					stage.stage[stage.current_stage]->me.action[front_num].action_mode = manager.action_array[j].type;
 					front_num++;
 					break;
 				}
 			}
 		}
 	}
-	stage.stage[stage.current_stage].me.setActionNum(front_num);
+	stage.stage[stage.current_stage]->me.setActionNum(front_num);
 
 
 	if (front_num == 0) {
@@ -211,7 +211,7 @@ void editStart() {
 	manager.reset();
 	
 	manager.load();
-	manager.action_num = stage.stage[stage.current_stage].max_action_num;
+	manager.action_num = stage.stage[stage.current_stage]->max_action_num;
 	
 	Game.AddChild(&edit_me);
 }

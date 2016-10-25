@@ -14,7 +14,7 @@ class Agent;
 class MeManager;
 
 extern StageManager stage;
-extern CScene title, game_main, edit_me,alert;
+extern CScene title, game_main, edit_me,alert,game_clear,game_over;
 extern MeManager manager;
 
 extern int font_l,font_m;

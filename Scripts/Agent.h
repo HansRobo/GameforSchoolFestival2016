@@ -39,6 +39,10 @@ public:
 		pos = VGet(200, 200);
 		direction = 0.0f;
 		count = 0;
+		damage = 1;
+		hp_point = speed_point = attack_point = 0;
+		this->action_num = 0;
+		this->hp = 0;
 	}
 	void setParam(int _action_num, int _hp) {
 		action_num = _action_num;
@@ -49,6 +53,18 @@ public:
 	}
 	int getActionNum() {
 		return action_num;
+	}
+	int getDamage(Agent *agent) {
+		int dam = 0;;
+		if (!agent->bullet.empty()) {
+			for (int i = 0; i < agent->bullet.size(); i++) {
+				if(agent->bullet[i].getValid() && GetDistance(agent->bullet[i].pos, pos) < agent->bullet[i].scale*2){
+					dam += agent->damage;
+					agent->bullet[i].count = 0;
+				}
+			}
+		}
+		return dam;
 	}
 	Action action[10];
 	void loop() {
@@ -62,7 +78,8 @@ public:
 				bullet[i].loop();
 			}
 		}
-		DrawCircle(pos, 20, RED, true);
+		DrawFormatString(pos.x, pos.y - 60,M_PINK, "HP:%d", hp);
+		DrawCircle(pos, 10, RED, true);
 		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
 	}
 	void checkBullet() {
