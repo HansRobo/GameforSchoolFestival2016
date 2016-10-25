@@ -115,6 +115,7 @@
   <ItemGroup>
     <ClInclude Include="Agent.h" />
     <ClInclude Include="Alert.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Stage.h" />

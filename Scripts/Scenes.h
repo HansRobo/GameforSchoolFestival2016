@@ -20,3 +20,4 @@ void stageSelectLoop();
 
 void gameStart();
 void editStart();
+void backToTitle();

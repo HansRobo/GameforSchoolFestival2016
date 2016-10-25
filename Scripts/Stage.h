@@ -8,6 +8,7 @@ public:
 
 	}
 	void load(int stage_num) {
+		enemy.clear();
 		char file_name[256];
 		sprintf(file_name,"Assets_Y68/Data/stage%d.txt",stage_num);
 		FILE *fp = fopen(file_name, "r");

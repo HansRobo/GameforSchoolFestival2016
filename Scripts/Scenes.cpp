@@ -215,3 +215,11 @@ void editStart() {
 	
 	Game.AddChild(&edit_me);
 }
+
+void backToTitle() {
+	sk_alert.count = 60;
+	sprintf(sk_alert.str,"ƒ^ƒCƒgƒ‹‰æ–Ê‚É–ß‚è‚Ü‚·");
+	sk_alert.scene = &title;
+	sk_alert.message();
+
+}

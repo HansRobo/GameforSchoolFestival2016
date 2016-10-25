@@ -10,6 +10,7 @@ public:
 	Alert() {
 		parent = nullptr;
 		count = -1;
+		scene = nullptr;
 	}
 	void message() {
 		parent = (Game.GetCurrentScene());
@@ -26,6 +27,10 @@ public:
 			count--;
 			if (count == 0) {
 				parent->RemoveChild();
+				if (scene != nullptr) {
+					Game.AddChild(scene);
+					scene = nullptr;
+				}
 				count = -1;
 			}
 		}
@@ -44,6 +49,7 @@ public:
 	}
 	char str[256];
 	int count;
+	CScene *scene;
 
 };
 

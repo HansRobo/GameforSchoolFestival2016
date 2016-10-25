@@ -1,6 +1,7 @@
 #pragma once
 #include"Suken.h"
 #include"Manager.h"
+#include"Bullet.h"
 using namespace std;
 enum AI_ACTION {
 	GO,
@@ -55,9 +56,26 @@ public:
 			count++;
 			doAction(count);
 		}
-
+		if (!bullet.empty()) {
+			checkBullet();
+			for (int i = 0; i < bullet.size();i++) {
+				bullet[i].loop();
+			}
+		}
 		DrawCircle(pos, 20, RED, true);
 		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
+	}
+	void checkBullet() {
+		if (!bullet.empty()) {
+			if (!bullet.front().getValid()) {
+				bullet.pop_front();
+			}
+		}
+		if (!bullet.empty()) {
+			if (!bullet.front().getValid()) {
+				checkBullet();
+			}
+		}
 	}
 	void doAction(int _count) {
 		int mode = _count%action_num;
@@ -106,6 +124,12 @@ public:
 		direction += TURN_RAD;
 	}
 	void actionShoot1() {
+		Bullet temp;
+		temp.count = 60;
+		temp.pos = pos;
+		temp.rad = direction;
+		temp.velocity = 10.0f;
+		bullet.push_back(temp);
 
 	}
 	void actionShoot2() {
@@ -126,6 +150,8 @@ public:
 	int attack_point;
 	int speed_point;
 	int hp_point;
+	std::deque<Bullet> bullet;
+	int damage;
 
 };
 
@@ -147,7 +173,7 @@ public:
 			const TCHAR *sss = Action::str[type];
 			//DrawCenterString((int)(pos.x + size.x / 2.0f),(int)( pos.y + 20.0f), (int)GetColor(255,255,0), "%s", sss);
 			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle(sss, strlen(sss),font_m) / 2, (int)(pos.y +size.y/2 -  DxLib::GetFontSizeToHandle(font_m) / 2), sss, YELLOW,font_m);
-			DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
+			//DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
 		}
 	}
 	void reset() {
