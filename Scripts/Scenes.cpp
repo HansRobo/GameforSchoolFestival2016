@@ -112,6 +112,23 @@ void titleLoop() {
 			DrawCircleAA(unit*i, unit*j ,r,100, GetColor(128, 128, 128), true);
 		}
 	}
+
+	int x = 100;
+	int str_num = (int)(System.GetFrame() / 1) % 18;
+	int col1 = GetColor(128, 128, 255);
+	int col2 = GetColor(255, 255, 0);
+	char str[18] = "the Battle of AIs";
+	for (int i = 0; i < 18;i++) {
+		if (i == str_num || i == 17-str_num) {
+			DrawFormatStringFToHandle(x,200-GetFontSizeToHandle(font_ll),col2,font_ll,"%c",str[i]);
+			x += GetDrawFormatStringWidthToHandle(font_ll,"%c",str[i]);
+		}
+		else
+		{
+			DrawFormatStringFToHandle(x, 200 - GetFontSizeToHandle(font_ll), col1, font_ll, "%c", str[i]);
+			x += GetDrawFormatStringWidthToHandle(font_ll, "%c", str[i]);
+		}
+	}
 	if (Event.key.GetDown(Event.key.RETURN)) {
 		
 	}
@@ -195,9 +212,9 @@ void gameStart() {
 	}
 	stage.stage[stage.current_stage]->me.setActionNum(front_num);
 
-
+	
 	if (front_num == 0) {
-		stage.load();
+		//stage.load();
 		sprintf(sk_alert.str,"コマンドが空です。最低１つは指定してください");
 		sk_alert.count = 60;
 		sk_alert.message();
@@ -212,7 +229,7 @@ void editStart() {
 	
 	manager.load();
 	manager.action_num = stage.stage[stage.current_stage]->max_action_num;
-	
+	stage.load();
 	Game.AddChild(&edit_me);
 }
 

@@ -79,8 +79,27 @@ public:
 			}
 		}
 		DrawFormatString(pos.x, pos.y - 60,M_PINK, "HP:%d", hp);
-		DrawCircle(pos, 10, RED, true);
+		
 		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
+	}
+	void drawMe() {
+		float scale = 20.0f;
+		int col = GetColor(50,255,50);
+		for (int i = 0; i < 6;i++) {
+			Vector2D s = VNorm(VGet(cos(M_PI / 3.0f*i), sin(M_PI / 3.0f*i)))*scale + pos;
+			Vector2D e = VNorm(VGet(cos(M_PI / 3.0f*(i+1)), sin(M_PI / 3.0f*(i+1))))*scale + pos;
+			DrawLineAA(s.x,s.y,e.x,e.y,col,3);
+		}
+		Vector2D v[3] = { pos,pos,pos };
+		for (int i = 0; i < 3; i++) {
+
+			//DrawTriangleAA(v[0].x,v[0].y,v[1].x,v[1].y,v[2].x,v[1].y,BLACK,true);
+
+		}
+		
+	}
+	void drawEnemy() {
+		DrawCircle(pos, 10, RED, true);
 	}
 	void checkBullet() {
 		if (!bullet.empty()) {
@@ -150,10 +169,22 @@ public:
 
 	}
 	void actionShoot2() {
-
+		Bullet temp;
+		temp.count = 60;
+		temp.pos = pos;
+		temp.rad = direction;
+		temp.velocity = 10.0f;
+		bullet.push_back(temp);
+		temp.rad += 0.5f;
+		bullet.push_back(temp);
+		temp.rad -= 1.0f;
+		bullet.push_back(temp);
 	}
 	Vector2D VGetRTheta(float r, float theta) {
 		return VGet(cos(theta), sin(theta))*r;
+	}
+	Vector2D VGetRTheta(float r, int theta) {
+		return VGet(cos(theta*180.0f / 3.1416f), sin(theta*180.0f/3.1416f))*r;
 	}
 
 

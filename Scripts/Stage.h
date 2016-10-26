@@ -45,6 +45,7 @@ public:
 	void actMe() {
 		me.search_target = getNearestEnemyPos(me.pos);
 		me.loop();
+		me.drawMe();
 		if (!enemy.empty()) {
 			for (int i = 0;i<enemy.size();i++ ){
 				me.hp -= (me.getDamage(&enemy[i]));
@@ -56,6 +57,7 @@ public:
 			for (int i = 0;i<enemy.size();i++) {
 				enemy[i].search_target = me.pos;
 				enemy[i].loop();
+				enemy[i].drawEnemy();
 				enemy[i].hp -= enemy[i].getDamage(&me);
 			}
 		}

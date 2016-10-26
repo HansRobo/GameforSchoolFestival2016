@@ -1,5 +1,9 @@
 #pragma once
 #include"Suken.h"
+
+#ifndef M_PI
+#define M_PI (3.1416f)
+#endif
 #define STAGE_NUM (5)
 
 #define ACTION_INTERVAL (8) 
@@ -17,4 +21,4 @@ extern StageManager stage;
 extern CScene title, game_main, edit_me,alert,game_clear,game_over;
 extern MeManager manager;
 
-extern int font_l,font_m;
+extern int font_l,font_m,font_ll;
