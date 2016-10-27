@@ -225,6 +225,10 @@ public:
 			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle(sss, strlen(sss),font_m) / 2, (int)(pos.y +size.y/2 -  DxLib::GetFontSizeToHandle(font_m) / 2), sss, YELLOW,font_m);
 			//DrawCenterString((int)(pos.x + size.x / 2.0f), (int)(pos.y + 120.0f), GetColor(255,255,0), "%d", _pos);
 		}
+		else
+		{
+			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle("‹ó", strlen("‹ó"), font_m) / 2, (int)(pos.y + size.y / 2 - DxLib::GetFontSizeToHandle(font_m) / 2), "‹ó", GetColor(100,100,0), font_m);
+		}
 	}
 	void reset() {
 		is_valid = false;
@@ -232,7 +236,7 @@ public:
 	int type;
 	Vector2D pos;
 	const Vector2D size = Vector2D(50.0f, 50.0f);
-	Vector2D anchor = Vector2D(450, 250);
+	Vector2D anchor = Vector2D(450, 150);
 	const int space = 60;
 	int num;
 	void setPos() {
@@ -371,7 +375,7 @@ public:
 		debug.Print("‚µ‚Ä‚­‚¾‚³‚¢");
 		Vector2D size = VGet(50.0f,50.0f);
 		int space = 60;
-		Vector2D left_top = VGet(380,400);
+		Vector2D left_top = VGet(380,250);
 
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
@@ -379,6 +383,16 @@ public:
 			if (is_action_locked[i]) {
 				DrawLineAA(left_top.x + space*i, left_top.y, left_top.x + size.x + space*i, left_top.y + size.y, RED, 5.0f);
 				DrawLineAA(left_top.x + space*i, left_top.y + size.y, left_top.x + size.x + space*i, left_top.y, RED, 5.0f);
+			}
+			
+		}
+		for (int i = 0; i < ACTION_NUM;i++) {
+			if (Event.LMouse.GetOn(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y)) {
+				pointed_type = i;
+				break;
+			}
+			else if (i == ACTION_NUM - 1) {
+				pointed_type = -1;
 			}
 		}
 		debug.Print("type : %d",selected_type);
@@ -389,7 +403,9 @@ public:
 						selected_type = i;
 						break;
 					}
+					
 				}
+				
 			}
 		}
 		else {
@@ -413,9 +429,26 @@ public:
 			}
 
 		}
+		Vector2D v[5];
+		v[0] = VGet(350,340);
+		v[1] = VGet(820,340);
+		v[2] = VGet(840,360);
+		v[3] = VGet(840,420);
+		v[4] = VGet(350,420);
+		for (int i = 0; i < 4;i++) {
+			DrawLineAA(v[i].x, v[i].y, v[i + 1].x, v[i + 1].y, WHITE,3.0f);
+		}
+		DrawLineAA(v[4].x, v[4].y, v[0].x, v[0].y, WHITE, 3.0f);
 		
+		if (pointed_type != -1) {
+			DrawFormatStringFToHandle(360,350,WHITE,font_m,"%s",Action::explanation[pointed_type]);
+		}
+		else {
+			DrawFormatStringFToHandle(360, 350, WHITE, font_m, "ƒRƒ}ƒ“ƒh‚ðã‚Ì");
+		}
 	}
-		int selected_type;
+	int selected_type;
+	int pointed_type;
 	int point;
 	bool is_action_locked[ACTION_NUM];
 	int action_num;

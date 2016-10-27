@@ -51,9 +51,10 @@ void suken::Awake(){
 	game_main.input.AddEventListener(Event.key.R, reload);
 
 	game_over.input.AddEventListener(Event.EVERY_FRAME,gameOverLoop);
+	game_over.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, &backToTitle);
 
 	game_clear.input.AddEventListener(Event.EVERY_FRAME, gameClearLoop);
-
+	game_clear.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, &backToTitle);
 
 	Game.AddChild(&title);
 

@@ -67,9 +67,6 @@ void editMeLoop() {
 	DrawCircle(spd, 3, YELLOW, true);
 	DrawCircle(hp, 3, YELLOW, true);
 
-
-
-
 	//////////////////////////////////////////////
 
 	debug.Print("select:%d",manager.selected_unit);

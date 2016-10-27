@@ -5,6 +5,7 @@ using namespace std;
 class Stage {
 public:
 	Stage() {
+
 		result_counter = 0;
 	}
 	void load(int stage_num) {
