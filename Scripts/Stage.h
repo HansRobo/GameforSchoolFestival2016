@@ -5,7 +5,7 @@ using namespace std;
 class Stage {
 public:
 	Stage() {
-
+		result_counter = 0;
 	}
 	void load(int stage_num) {
 		enemy.clear();
@@ -81,6 +81,7 @@ public:
 	int max_action_num;
 	Agent me;
 	vector<Agent> enemy;
+	int result_counter;
 };
 
 class StageManager {

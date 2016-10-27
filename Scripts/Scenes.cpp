@@ -9,10 +9,33 @@ char Action::str[ACTION_NUM][10] = {
 	"弾壱",
 	"弾弐",
 };
+char Action::explanation[ACTION_NUM][100] = {
+	"前に進みます",
+	"後ろにバックします",
+	"自分に一番近い敵を見つけてその方向を向きます",
+	"右に90度ターンします",
+	"左に90度ターンします",
+	"自分の進行方向に弾を１発撃ちます",
+	"自分の進行方向に弾を3発ばらまきます",
+};
 void gameMainLoop() {
 	stage.stage[stage.current_stage]->loop();
 	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);
 
+	if (stage.stage[stage.current_stage]->me.hp <= 0 && game_main.sceneChild == nullptr) {
+		game_main.AddChild(&game_over);
+	}
+	int sum = 0;
+	if (!stage.stage[stage.current_stage]->enemy.empty()) {
+		for (int i = 0; i < stage.stage[stage.current_stage]->enemy.size(); i++) {
+			if (stage.stage[stage.current_stage]->enemy[i].hp > 0) {
+				sum++;
+			}
+		}
+		if (sum == 0 && game_main.sceneChild == nullptr) {
+			game_main.AddChild(&game_clear);
+		}
+	}
 }
 
 
@@ -239,4 +262,82 @@ void backToTitle() {
 	sk_alert.scene = &title;
 	sk_alert.message();
 
+}
+
+
+void gameOverLoop() {
+	stage.stage[stage.current_stage]->result_counter++;
+	int cnt = stage.stage[stage.current_stage]->result_counter;
+	int limit = 60, range = 60;
+	int col;
+
+	int cy = 180;
+	int h = 60;
+	int dx = 60;
+	int w = 60;
+	int x1 = 900 - 810 * ((float)cnt / (float)range);
+	int x2 = (810 - w) *((float)cnt / (float)range);
+
+	if (cnt < 60) {
+		col = GetColor(200 - 200 * ((float)abs(range - cnt) / range), 30 - 30 * ((float)abs(-cnt + range) / range), 30 - 30 * ((float)abs(-cnt + range) / range));
+		
+	}
+	else {
+		col = GetColor(200, 30, 30);
+		x1 = 90;
+		x2 = 810 - w;
+	}
+
+	DrawLineAA(90, 180, 170, 120, col);
+	DrawLineAA(90, 180, 170, 240, col);
+	DrawLineAA(170, 240, 740, 240, col);
+	DrawLineAA(170, 120, 740, 120, col);
+	DrawLineAA(810, 180, 740, 240, col);
+	DrawLineAA(810, 180, 740, 120, col);
+
+	DrawQuadrangleAA(x1, cy, x1 + w, cy, x1 + dx + w, cy + h, x1 + dx, cy + h, RED, true);
+	DrawQuadrangleAA(x1, cy, x1 + w, cy, x1 + dx + w, cy - h, x1 + dx, cy - h, RED, true);
+
+	DrawQuadrangleAA(x2, cy, x2 + w, cy, x2 - dx + w, cy + h, x2 - dx, cy + h, RED, true);
+	DrawQuadrangleAA(x2, cy, x2 + w, cy, x2 - dx + w, cy - h, x2 - dx, cy - h, RED, true);
+
+	DrawFormatStringFToHandle(180, 140, col, font_ll, "GAME OVER");
+	
+}
+void gameClearLoop() {
+	stage.stage[stage.current_stage]->result_counter++;
+	int cnt = stage.stage[stage.current_stage]->result_counter;
+	int limit = 100, range = 100;
+	int col;
+
+	int cy = 180;
+	int h = 60;
+	int dx = 60;
+	int w = 60;
+	int x1 = 900 - 890 * ((float)cnt / (float)range);
+	int x2 = (890 - w) *((float)cnt / (float)range);
+
+	if (cnt < range) {
+		col = GetColor(255 - 255 * ((float)abs(range - cnt) / range), 255 - 255 * ((float)abs(-cnt + range) / range), 30 - 30 * ((float)abs(-cnt + range) / range));
+		
+	}
+	else {
+		col = GetColor(255, 255, 30);
+		x1 = 10;
+		x2 = 890 - w;
+	}
+	DrawLineAA(50, 180, 120, 120, col);
+	DrawLineAA(50, 180, 120, 240, col);
+	DrawLineAA(120, 240, 770, 240, col);
+	DrawLineAA(120, 120, 770, 120, col);
+	DrawLineAA(840, 180, 770, 240, col);
+	DrawLineAA(840, 180, 770, 120, col);
+	
+	DrawQuadrangleAA(x1, cy, x1 + w, cy, x1 + dx + w, cy + h, x1 + dx, cy + h, YELLOW, true);
+	DrawQuadrangleAA(x1, cy, x1 + w, cy, x1 + dx + w, cy - h, x1 + dx, cy - h, YELLOW, true);
+
+	DrawQuadrangleAA(x2, cy, x2 + w, cy, x2 - dx + w, cy + h, x2 - dx, cy + h, YELLOW, true);
+	DrawQuadrangleAA(x2, cy, x2 + w, cy, x2 - dx + w, cy - h, x2 - dx, cy - h, YELLOW, true);
+
+	DrawFormatStringFToHandle(100, 140, col, font_ll, "Congratulations!");
 }

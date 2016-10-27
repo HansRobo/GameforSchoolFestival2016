@@ -21,6 +21,7 @@ public:
 	}
 	int action_mode;
 	static char str[ACTION_NUM][10];
+	static char explanation[ACTION_NUM][100];
 };
 
 class Agent {
@@ -42,7 +43,7 @@ public:
 		damage = 1;
 		hp_point = speed_point = attack_point = 0;
 		this->action_num = 0;
-		this->hp = 0;
+		this->hp = 1;
 	}
 	void setParam(int _action_num, int _hp) {
 		action_num = _action_num;
@@ -50,6 +51,7 @@ public:
 	}
 	void setActionNum(int num) {
 		action_num = num;
+		hp = hp_point;
 	}
 	int getActionNum() {
 		return action_num;
@@ -214,9 +216,9 @@ public:
 	void draw(int i, int _pos) {
 		
 		DrawBox(pos.x, pos.y, pos.x + size.x, pos.y + size.y, GetColor(128, 128, 255), false);
-		//for (int i = 0; i < 30;i++) {
-		//	DrawBox(pos.x+i, pos.y+i, pos.x + size.x-i, pos.y + size.y-i, GetColor(255.0f*((float)i/30.0f) , 255.0f*((float)i / 30.0f), 255), false);
-		//}
+		for (int i = -5; i < 5;i++) {
+			DrawBox(pos.x+i, pos.y+i, pos.x + size.x-i, pos.y + size.y-i, GetColor(255.0f-255.0f*((float)abs(i)/5.0f) , 255.0f-255.0f*((float)abs(i) / 5.0f), 0.0f-0.0f*((float)abs(i) / 5.0f)), false);
+		}
 		if (is_valid) {
 			const TCHAR *sss = Action::str[type];
 			//DrawCenterString((int)(pos.x + size.x / 2.0f),(int)( pos.y + 20.0f), (int)GetColor(255,255,0), "%s", sss);

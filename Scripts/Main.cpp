@@ -50,7 +50,9 @@ void suken::Awake(){
 	game_main.input.AddEventListener(Event.EVERY_FRAME,gameMainLoop);
 	game_main.input.AddEventListener(Event.key.R, reload);
 
+	game_over.input.AddEventListener(Event.EVERY_FRAME,gameOverLoop);
 
+	game_clear.input.AddEventListener(Event.EVERY_FRAME, gameClearLoop);
 
 
 	Game.AddChild(&title);
