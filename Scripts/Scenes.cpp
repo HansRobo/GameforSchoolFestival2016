@@ -18,6 +18,8 @@ char Action::explanation[ACTION_NUM][100] = {
 	"Ž©•ª‚Ìis•ûŒü‚É’e‚ð‚P”­Œ‚‚¿‚Ü‚·",
 	"Ž©•ª‚Ìis•ûŒü‚É’e‚ð3”­‚Î‚ç‚Ü‚«‚Ü‚·",
 };
+char Action::message[256] = "";
+
 void gameMainLoop() {
 	stage.stage[stage.current_stage]->loop();
 	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);

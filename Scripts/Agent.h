@@ -22,6 +22,7 @@ public:
 	int action_mode;
 	static char str[ACTION_NUM][10];
 	static char explanation[ACTION_NUM][100];
+	static char message[256];
 };
 
 class Agent {
@@ -441,11 +442,49 @@ public:
 		DrawLineAA(v[4].x, v[4].y, v[0].x, v[0].y, WHITE, 3.0f);
 		
 		if (pointed_type != -1) {
-			DrawFormatStringFToHandle(360,350,WHITE,font_m,"%s",Action::explanation[pointed_type]);
+			sprintf(Action::message,"%s",Action::explanation[pointed_type]);
 		}
 		else {
-			DrawFormatStringFToHandle(360, 350, WHITE, font_m, "コマンドを上の");
+			sprintf(Action::message,"%s", "コマンドを上のボックスにドラッグ＆ドロップしましょう");
+			
 		}
+		Vector2D b[6];
+		b[0] = VGet(400,220);
+		b[1] = VGet(475,220);
+		b[2] = VGet(500,233);
+		b[3] = VGet(475,245);
+		b[4] = VGet(400,245);
+		b[5] = VGet(375,233);
+		for (int i = 0; i < 5;i++) {
+			DrawLineAA(b[i].x,b[i].y,b[i+1].x,b[i+1].y,WHITE,2.0f);
+		}
+		DrawLineAA(b[5].x, b[5].y, b[0].x, b[0].y, WHITE, 2.0f);
+		DrawStringToHandle(405,223,"コマンド",WHITE,font_m);
+	
+		Vector2D c[8];
+		c[0] = VGet(500,233);
+		c[1] = VGet(800,233);
+		c[2] = VGet(820,240);
+		c[3] = VGet(820,320);
+		c[4] = VGet(370,320);
+		c[5] = VGet(350,310);
+		c[6] = VGet(350,233);
+		c[7] = VGet(375,233);
+		for (int i = 0; i < 7; i++) {
+			DrawLineAA(c[i].x, c[i].y, c[i + 1].x, c[i + 1].y, WHITE, 2.0f);
+		}
+		
+
+		for (int i = 0; i < action_num; i++) {
+			Vector2D vertex1 = action_array[i].pos;
+			Vector2D vertex2 = action_array[i].pos + action_array[i].size;
+			if (Event.LMouse.GetOn(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
+				sprintf(Action::message,"ドラッグすることで順番を入れ替えることができます");
+			}
+		}
+
+		DrawFormatStringFToHandle(360, 350, WHITE, font_m, Action::message);
+		sprintf(Action::message, "");
 	}
 	int selected_type;
 	int pointed_type;
