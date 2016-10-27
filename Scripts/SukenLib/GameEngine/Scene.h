@@ -289,10 +289,15 @@ public:
 */
 	CScene *GetCurrentScene();
 	int screenShot;
+	void SetMusic(char *file_name);
+	void StartMusic();
+	void StopMusic();
+	bool IsMusicValid();
 private:
 	bool focus;///<  @brief à–¾
 	static unsigned int sceneNum;///<  @brief à–¾
 	unsigned int serialNum;///<  @brief à–¾
+	int music;
 	
 };
 

@@ -8,6 +8,7 @@ char Action::str[ACTION_NUM][10] = {
 	"¶Ü",
 	"’eˆë",
 	"’e“ó",
+	"’eŽQ"
 };
 char Action::explanation[ACTION_NUM][100] = {
 	"‘O‚Éi‚Ý‚Ü‚·",
@@ -16,7 +17,8 @@ char Action::explanation[ACTION_NUM][100] = {
 	"‰E‚É90“xƒ^[ƒ“‚µ‚Ü‚·",
 	"¶‚É90“xƒ^[ƒ“‚µ‚Ü‚·",
 	"Ž©•ª‚Ìis•ûŒü‚É’e‚ð‚P”­Œ‚‚¿‚Ü‚·",
-	"Ž©•ª‚Ìis•ûŒü‚É’e‚ð3”­‚Î‚ç‚Ü‚«‚Ü‚·",
+	"Ž©•ª‚Ìis•ûŒü‚É•ûŒü‚ð‚¸‚ç‚µ‚Ä’e‚ð3”­‚Î‚ç‚Ü‚«‚Ü‚·",
+	"Ž©•ª‚Ìis•ûŒü‚É’e‚ð‚Q˜AŽË‚µ‚Ü‚·"
 };
 char Action::message[256] = "";
 
@@ -25,7 +27,7 @@ void gameMainLoop() {
 	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);
 
 	if (stage.stage[stage.current_stage]->me.hp <= 0 && game_main.sceneChild == nullptr) {
-		game_main.AddChild(&game_over);
+		Game.AddChild(&game_over);
 	}
 	int sum = 0;
 	if (!stage.stage[stage.current_stage]->enemy.empty()) {
@@ -35,7 +37,7 @@ void gameMainLoop() {
 			}
 		}
 		if (sum == 0 && game_main.sceneChild == nullptr) {
-			game_main.AddChild(&game_clear);
+			Game.AddChild(&game_clear);
 		}
 	}
 }
@@ -72,13 +74,19 @@ void editMeLoop() {
 	//////////////////////////////////////////////
 
 	debug.Print("select:%d",manager.selected_unit);
+	
+
+	//draw
+	for (int i = 0; i < manager.action_num; i++) {
+		manager.action_array[i].draw(i, manager.action_array[i].num);
+	}
+
+
 	manager.selectType();
 	manager.sort();
 
-	//draw
-	for (int i = 0; i < manager.action_num;i++) {
-		manager.action_array[i].draw(i,manager.action_array[i].num);
-	}
+
+
 
 }
 void upATK() {
@@ -274,17 +282,19 @@ void gameOverLoop() {
 	int h = 60;
 	int dx = 60;
 	int w = 60;
-	int x1 = 900 - 810 * ((float)cnt / (float)range);
-	int x2 = (810 - w) *((float)cnt / (float)range);
-
+	int x1 = 900 - 810 * ((float)cnt / 30.0f);
+	int x2 = (810 - w) *((float)cnt / 30.0f);
+	if (cnt > 30) {
+		x1 = 90;
+		x2 = 810 - w;
+	}
 	if (cnt < 60) {
 		col = GetColor(200 - 200 * ((float)abs(range - cnt) / range), 30 - 30 * ((float)abs(-cnt + range) / range), 30 - 30 * ((float)abs(-cnt + range) / range));
 		
 	}
 	else {
 		col = GetColor(200, 30, 30);
-		x1 = 90;
-		x2 = 810 - w;
+		
 	}
 
 	DrawLineAA(90, 180, 170, 120, col);
@@ -313,17 +323,19 @@ void gameClearLoop() {
 	int h = 60;
 	int dx = 60;
 	int w = 60;
-	int x1 = 900 - 890 * ((float)cnt / (float)range);
-	int x2 = (890 - w) *((float)cnt / (float)range);
-
+	int x1 = 900 - 890 * ((float)cnt / 30.0f);
+	int x2 = (890 - w) *((float)cnt / 30.0f);
+	if (cnt > 30) {
+		x1 = 10;
+		x2 = 890 - w;
+	}
 	if (cnt < range) {
 		col = GetColor(255 - 255 * ((float)abs(range - cnt) / range), 255 - 255 * ((float)abs(-cnt + range) / range), 30 - 30 * ((float)abs(-cnt + range) / range));
 		
 	}
 	else {
 		col = GetColor(255, 255, 30);
-		x1 = 10;
-		x2 = 890 - w;
+		
 	}
 	DrawLineAA(50, 180, 120, 120, col);
 	DrawLineAA(50, 180, 120, 240, col);

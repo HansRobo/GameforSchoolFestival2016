@@ -69,6 +69,7 @@ private:
 	std::vector<CScene*> sceneChild;///<  @brief à–¾
 	bool useDrawLoopFlag;///<  @brief à–¾
 	std::queue<std::pair<SCENE_OPERATION_COMMAND, CScene*>> commandQueue;
+	CScene *musicFront;
 #ifdef SCENE_TRANSITION_ANIMATION
 	bool IsSceneTransition;
 	//std::queue<std::pair<SCENE_OPERATION_COMMAND, CScene*>> commandQueueforTransitionAnimation;

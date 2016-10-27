@@ -24,6 +24,7 @@ void suken::Awake(){
 	title.input.AddEventListener(Event.EVERY_FRAME, titleLoop);
 	title.SetButton(System.GetWindowX()/2-100,400,System.GetWindowX()/2+100,450,GetColor(128,255,128),"SELECT STAGE",BLACK,&stage_select);
 	title.input.AddEventListener(Event.key.RETURN,&stage_select);
+	title.SetMusic("Assets_Y68/Music/history.mp3");
 
 	stage_select.input.AddEventListener(Event.EVERY_FRAME, stageSelectLoop);
 	stage_select.SetButton(System.GetWindowX() / 2 + 100, 450, System.GetWindowX() / 2 + 300, 500, GetColor(128, 255, 128), "SELECT STAGE", BLACK, editStart);
@@ -49,6 +50,7 @@ void suken::Awake(){
 	game_main.SetButton(System.GetWindowX()-80,20,System.GetWindowX()-20,80,GetColor(255,255,0),"–ß‚é",BLACK,&backToTitle);
 	game_main.input.AddEventListener(Event.EVERY_FRAME,gameMainLoop);
 	game_main.input.AddEventListener(Event.key.R, reload);
+	game_main.SetMusic("Assets_Y68/Music/wen-kamuy2.mp3");
 
 	game_over.input.AddEventListener(Event.EVERY_FRAME,gameOverLoop);
 	game_over.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, &backToTitle);

@@ -7,6 +7,7 @@ public:
 	Stage() {
 
 		result_counter = 0;
+		scroll = VGet(0, 0);
 	}
 	void load(int stage_num) {
 		enemy.clear();
@@ -39,14 +40,35 @@ public:
 			System.Escape();
 		}
 	}
+	void controlScroll() {
+		float diff_scroll = 0.02f;
+		Vector2D pos = me.pos + scroll;
+		scroll -= (pos - VGet(450.0f, 300.0f))*diff_scroll;
+	
+	}
+	void drawGrid() {
+		int col = GetColor(50,50,50);
+		int grid_unit = 50;
+		int x = scroll.x;
+		int y = scroll.y;
+		x %=grid_unit;
+		y %= grid_unit;
+		for (int i = -10; i <= 20;i++) {
+			DrawLineAA(x + i*grid_unit ,0 ,x + i*grid_unit,600,col,0.5f);
+			DrawLineAA(0, y + i*grid_unit, 900, y + i*grid_unit, col,0.5f);
+		}
+	}
 	void loop() {
+		drawGrid();
 		actMe();
 		actEnemy();
+		controlScroll();
+		
 	}
 	void actMe() {
 		me.search_target = getNearestEnemyPos(me.pos);
-		me.loop();
-		me.drawMe();
+		me.loop(scroll);
+		me.drawMe(scroll);
 		if (!enemy.empty()) {
 			for (int i = 0;i<enemy.size();i++ ){
 				me.hp -= (me.getDamage(&enemy[i]));
@@ -56,10 +78,12 @@ public:
 	void actEnemy() {
 		if(!enemy.empty()){
 			for (int i = 0;i<enemy.size();i++) {
-				enemy[i].search_target = me.pos;
-				enemy[i].loop();
-				enemy[i].drawEnemy();
-				enemy[i].hp -= enemy[i].getDamage(&me);
+				if (enemy[i].isValid()) {
+					enemy[i].search_target = me.pos;
+					enemy[i].loop(scroll);
+					enemy[i].drawEnemy(scroll);
+					enemy[i].hp -= enemy[i].getDamage(&me);
+				}
 			}
 		}
 	}
@@ -69,10 +93,12 @@ public:
 
 		if (!enemy.empty()) {
 			for (int i = 0; i < enemy.size();i++) {
-				float distance = GetSquareDistance(enemy[i].pos, _pos);
-				if ( distance < min_distance) {
-					min_distance = distance;
-					nearest = enemy[i].pos;
+				if (enemy[i].isValid()) {
+					float distance = GetSquareDistance(enemy[i].pos, _pos);
+					if (distance < min_distance) {
+						min_distance = distance;
+						nearest = enemy[i].pos;
+					}
 				}
 			}
 
@@ -83,6 +109,7 @@ public:
 	Agent me;
 	vector<Agent> enemy;
 	int result_counter;
+	Vector2D scroll;
 };
 
 class StageManager {
@@ -104,6 +131,7 @@ public:
 	int count;
 	const int animation_time = 20;
 	float base_rad;
+	
 };
 
 class StageSelectManager {

@@ -12,6 +12,7 @@ suken::CGame::CGame()
 {
 	useDrawLoopFlag = true;
 	rootScene.ResetSceneNum();
+	musicFront = nullptr;
 #ifdef SCENE_TRANSITION_ANIMATION
 	IsSceneTransition = false;
 #endif
@@ -406,6 +407,15 @@ void suken::CGame::ExecuteCommand()
 		case ADD:
 			//フォーカス移動
 			GetCurrentScene()->SetFocus(false);
+			
+			if (commandQueue.front().second->IsMusicValid()) {
+				if (musicFront != nullptr) {
+					musicFront->StopMusic();
+				}
+				musicFront = commandQueue.front().second;
+				musicFront->StartMusic();
+			}
+			
 			commandQueue.front().second->SetFocus(true);
 			//スクリーンショット
 			System.GetScreenShot(&this->GetCurrentScene()->screenShot);

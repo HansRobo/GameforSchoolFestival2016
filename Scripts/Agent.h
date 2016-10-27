@@ -11,6 +11,7 @@ enum AI_ACTION {
 	TURN_L,
 	SHOOT_1,
 	SHOOT_2,
+	SHOOT_3,
 	ACTION_NUM
 };
 
@@ -70,27 +71,38 @@ public:
 		return dam;
 	}
 	Action action[10];
-	void loop() {
+	void loop(Vector2D scrl) {
 		if (System.GetFrame() % ACTION_INTERVAL == 0) {
 			count++;
 			doAction(count);
 		}
+		switch (action[count%action_num].action_mode) {
+		case 0:
+			pos += VGetRTheta(velocity/ACTION_INTERVAL,direction);
+			break;
+		case 1:
+			pos -= VGetRTheta(velocity / ACTION_INTERVAL, direction);
+			break;
+		}
 		if (!bullet.empty()) {
 			checkBullet();
 			for (int i = 0; i < bullet.size();i++) {
-				bullet[i].loop();
+				bullet[i].loop(scrl);
 			}
 		}
 		DrawFormatString(pos.x, pos.y - 60,M_PINK, "HP:%d", hp);
 		
 		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
 	}
-	void drawMe() {
+	bool isValid() {
+		return (hp > 0);
+	}
+	void drawMe(Vector2D scrl) {
 		float scale = 20.0f;
 		int col = GetColor(50,255,50);
 		for (int i = 0; i < 6;i++) {
-			Vector2D s = VNorm(VGet(cos(M_PI / 3.0f*i), sin(M_PI / 3.0f*i)))*scale + pos;
-			Vector2D e = VNorm(VGet(cos(M_PI / 3.0f*(i+1)), sin(M_PI / 3.0f*(i+1))))*scale + pos;
+			Vector2D s = VNorm(VGet(cos(M_PI / 3.0f*i), sin(M_PI / 3.0f*i)))*scale + pos + scrl;
+			Vector2D e = VNorm(VGet(cos(M_PI / 3.0f*(i+1)), sin(M_PI / 3.0f*(i+1))))*scale + pos + scrl;
 			DrawLineAA(s.x,s.y,e.x,e.y,col,3);
 		}
 		Vector2D v[3] = { pos,pos,pos };
@@ -101,8 +113,8 @@ public:
 		}
 		
 	}
-	void drawEnemy() {
-		DrawCircle(pos, 10, RED, true);
+	void drawEnemy(Vector2D scrl) {
+		DrawCircle(pos +scrl, 10, RED, true);
 	}
 	void checkBullet() {
 		if (!bullet.empty()) {
@@ -140,6 +152,9 @@ public:
 		case SHOOT_2:
 			actionShoot2();
 			break;
+		case SHOOT_3:
+			actionShoot3();
+			break;
 		default:
 			break;
 
@@ -147,10 +162,10 @@ public:
 	}
 
 	void actionGo() {
-		pos += VGetRTheta(velocity, direction);
+		//pos += VGetRTheta(velocity, direction);
 	}
 	void actionBack() {
-		pos -= VGetRTheta(velocity, direction);
+		//pos -= VGetRTheta(velocity, direction);
 	}
 	void actionSearch() {
 		Vector2D target = search_target - pos;
@@ -164,7 +179,7 @@ public:
 	}
 	void actionShoot1() {
 		Bullet temp;
-		temp.count = 60;
+		temp.count = 200;
 		temp.pos = pos;
 		temp.rad = direction;
 		temp.velocity = 10.0f;
@@ -173,7 +188,7 @@ public:
 	}
 	void actionShoot2() {
 		Bullet temp;
-		temp.count = 60;
+		temp.count = 200;
 		temp.pos = pos;
 		temp.rad = direction;
 		temp.velocity = 10.0f;
@@ -181,6 +196,17 @@ public:
 		temp.rad += 0.5f;
 		bullet.push_back(temp);
 		temp.rad -= 1.0f;
+		bullet.push_back(temp);
+	}
+	void actionShoot3() {
+		Bullet temp;
+		temp.count = 200;
+		temp.pos = pos;
+		temp.rad = direction;
+		temp.velocity = 10.0f;
+		bullet.push_back(temp);
+
+		temp.pos -= VGetRTheta(20.0f,direction);
 		bullet.push_back(temp);
 	}
 	Vector2D VGetRTheta(float r, float theta) {

@@ -13,6 +13,7 @@ suken::CScene::CScene()
 	focus = false;
 	sceneChild = nullptr;
 	screenShot = NULL;
+	music = -1;
 }
 void suken::CScene::Loop()
 {
@@ -727,4 +728,21 @@ suken::CScene *suken::CScene::GetCurrentScene()
 	{
 		return this;
 	}
+}
+void suken::CScene::SetMusic(char *file_name) {
+	music = LoadSoundMem(file_name);
+}
+void suken::CScene::StartMusic() {
+	if (music != -1) {
+		PlaySoundMem(music, DX_PLAYTYPE_LOOP);
+	}
+}
+void suken::CScene::StopMusic() {
+	if (music != -1) {
+		StopSoundMem(music);
+	}
+}
+
+bool suken::CScene::IsMusicValid() {
+	return (music != -1);
 }
