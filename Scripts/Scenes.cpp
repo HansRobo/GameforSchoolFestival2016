@@ -1,5 +1,6 @@
 #include"Scenes.h"
 #include"Alert.h"
+int lock;
 char Action::str[ACTION_NUM][10] = {
 	"直進",
 	"後進",
@@ -162,6 +163,8 @@ void titleLoop() {
 	if (Event.key.GetDown(Event.key.RETURN)) {
 		
 	}
+
+	
 }
 
 
@@ -206,12 +209,15 @@ void stageSelectLoop() {
 	DrawCircleAA(-800, 530, 950, 100, GetColor(0,0, 0), true);
 	Vector2D c = VGet(-800,565);
 	debug.Print("base:%f",stage.base_rad);
-	for (int i = 0; i < STAGE_NUM;i++) {
+	for (int i = 0; i < STAGE_NUM; i++) {
 		float rad = -(i)*0.15f - stage.base_rad;
-		DrawCircleAA(c.x + 990.0f*cos(rad),c.y + 990.0f*sin(rad),60*powf(((1.57f - abs(rad))/1.57f),1.5f),100,YELLOW,true);
-		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 52 * powf(((1.57f - abs(rad)) / 1.57f),1.5f), 100, BLACK, true);
-		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 50 * powf(((1.57f - abs(rad)) / 1.57f),1.5f), 100, WHITE, true);
+		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 60 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), 100, YELLOW, true);
+		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 52 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), 100, BLACK, true);
+		DrawCircleAA(c.x + 990.0f*cos(rad), c.y + 990.0f*sin(rad), 50 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), 100, WHITE, true);
 		DrawFormatStringToHandle(c.x + 990.0f*cos(rad) + 100, c.y + 990.0f*sin(rad) - 20, GetColor(255, 255, 255), font_l, "STAGE %d", i + 1);
+		if (!manager.is_stage_valid[i]) {
+			DrawExtendGraph(c.x + 990.0f*cos(rad) - 40 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), c.y + 990.0f*sin(rad) - 40 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), c.x + 990.0f*cos(rad) + 40 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), c.y + 990.0f*sin(rad) + 40 * powf(((1.57f - abs(rad)) / 1.57f), 1.5f), lock, true);
+		}
 	}
 	//if (stage.transition_mode == 0) {
 		int brightness = (int)( (255.0f)*powf(abs((float)stage.count - (float)(stage.animation_time / 2.0f)) / (float)(stage.animation_time / 2.0f),2.0f));
@@ -255,12 +261,19 @@ void gameStart() {
 }
 
 void editStart() {
-	manager.reset();
-	
-	manager.load();
-	manager.action_num = stage.stage[stage.current_stage]->max_action_num;
-	stage.load();
-	Game.AddChild(&edit_me);
+	if (manager.is_stage_valid[stage.current_stage]) {
+		manager.reset();
+
+		manager.load();
+		manager.action_num = stage.stage[stage.current_stage]->max_action_num;
+		stage.load();
+		Game.AddChild(&edit_me);
+	}
+	else {
+		sprintf(sk_alert.str, "ロックが解除されていません");
+		sk_alert.count = 60;
+		sk_alert.message();
+	}
 }
 
 void backToTitle() {

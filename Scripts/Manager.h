@@ -22,3 +22,4 @@ extern CScene title, game_main, edit_me,alert,game_clear,game_over;
 extern MeManager manager;
 
 extern int font_l,font_m,font_ll;
+extern int lock;

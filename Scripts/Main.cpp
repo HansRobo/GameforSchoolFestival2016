@@ -24,11 +24,35 @@ void suken::Awake(){
 	title.input.AddEventListener(Event.EVERY_FRAME, titleLoop);
 	title.SetButton(System.GetWindowX()/2-100,400,System.GetWindowX()/2+100,450,GetColor(128,255,128),"SELECT STAGE",BLACK,&stage_select);
 	title.input.AddEventListener(Event.key.RETURN,&stage_select);
-	title.SetMusic("Assets_Y68/Music/history.mp3");
+	//title.SetMusic("Assets_Y68/Music/history.mp3");
 
 	stage_select.input.AddEventListener(Event.EVERY_FRAME, stageSelectLoop);
 	stage_select.SetButton(System.GetWindowX() / 2 + 100, 450, System.GetWindowX() / 2 + 300, 500, GetColor(128, 255, 128), "SELECT STAGE", BLACK, editStart);
 	stage_select.input.AddEventListener(Event.key.RETURN, editStart);
+	stage_select.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, backToTitle);
+	stage_select.input.AddEventListener(Event.key.BACK, backToTitle);
+
+	int SIHandle = MakeARGB8ColorSoftImage(100,100);
+	FillSoftImage(SIHandle, 0, 0, 0, 0);
+	DrawCircleSoftImage(SIHandle,50,35,25,30,30,150,128);
+	DrawCircleSoftImage(SIHandle, 50, 35, 12, 0, 0, 0, 0);
+	for (int i = 0; i < 100;i++) {
+		for (int j = 36; j < 100;j++) {
+			DrawPixelSoftImage(SIHandle,i,j,0,0,0,0);
+		}
+	}
+	for (int i = 20; i <= 80;i++) {
+		for (int j = 40; j <= 80;j++) {
+			DrawPixelSoftImage(SIHandle,i,j,30,30,150,128);
+		}
+	}
+	DrawCircleSoftImage(SIHandle, 50, 65, 7, 0, 0, 0, 0);
+	for (int i = 47; i <= 53;i++) {
+		for (int j = 50; j <= 65;j++) {
+			DrawPixelSoftImage(SIHandle, i, j, 0, 0, 0, 0);
+		}
+	}
+	lock = CreateGraphFromSoftImage(SIHandle);
 
 	edit_me.input.AddEventListener(Event.EVERY_FRAME, editMeLoop);
 	edit_me.SetButton( 500, 500, 700, 550, GetColor(128, 255, 128), "GAME START", BLACK, gameStart);
@@ -43,14 +67,14 @@ void suken::Awake(){
 	edit_me.SetButton(x_2, y+40, x_2 + 50, y + 70, YELLOW, "©", BLACK, downSPD);
 	edit_me.SetButton(x_1, y+80, x_1 + 50, y + 110, YELLOW, "¨", BLACK, upHP);
 	edit_me.SetButton(x_2, y+80, x_2 + 50, y + 110, YELLOW, "©", BLACK, downHP);
-
+	edit_me.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, &stage_select);
 	x_1 = 400;
 	
 
 	game_main.SetButton(System.GetWindowX()-80,20,System.GetWindowX()-20,80,GetColor(255,255,0),"–ß‚é",BLACK,&backToTitle);
 	game_main.input.AddEventListener(Event.EVERY_FRAME,gameMainLoop);
 	game_main.input.AddEventListener(Event.key.R, reload);
-	game_main.SetMusic("Assets_Y68/Music/wen-kamuy2.mp3");
+	//game_main.SetMusic("Assets_Y68/Music/wen-kamuy2.mp3");
 
 	game_over.input.AddEventListener(Event.EVERY_FRAME,gameOverLoop);
 	game_over.SetButton(System.GetWindowX() - 80, 20, System.GetWindowX() - 20, 80, GetColor(255, 255, 0), "–ß‚é", BLACK, &backToTitle);

@@ -312,6 +312,17 @@ public:
 					is_action_locked[i] = false;
 				}
 			}
+
+			for (int i = 0; i < STAGE_NUM; i++) {
+				int temp;
+				fscanf(fp, "%d", &temp);
+				if (temp == 0) {
+					is_stage_valid[i] = false;
+				}
+				else {
+					is_stage_valid[i] = true;
+				}
+			}
 		}
 		else {
 			MessageBox(GetMainWindowHandle(), "データの読み込みに失敗しました", "警告", MB_OK);
@@ -402,7 +413,7 @@ public:
 		debug.Print("してください");
 		Vector2D size = VGet(50.0f,50.0f);
 		int space = 60;
-		Vector2D left_top = VGet(380,250);
+		Vector2D left_top = VGet(365,255);
 
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
@@ -489,9 +500,9 @@ public:
 	
 		Vector2D c[8];
 		c[0] = VGet(500,233);
-		c[1] = VGet(800,233);
-		c[2] = VGet(820,240);
-		c[3] = VGet(820,320);
+		c[1] = VGet(830,233);
+		c[2] = VGet(850,240);
+		c[3] = VGet(850,320);
 		c[4] = VGet(370,320);
 		c[5] = VGet(350,310);
 		c[6] = VGet(350,233);
@@ -506,6 +517,7 @@ public:
 			Vector2D vertex2 = action_array[i].pos + action_array[i].size;
 			if (Event.LMouse.GetOn(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
 				sprintf(Action::message,"ドラッグすることで順番を入れ替えることができます");
+				DrawFormatStringToHandle(360, 380, WHITE, font_m, "右クリックでコマンドを解除できます");
 			}
 		}
 
@@ -516,6 +528,7 @@ public:
 	int pointed_type;
 	int point;
 	bool is_action_locked[ACTION_NUM];
+	bool is_stage_valid[STAGE_NUM];
 	int action_num;
 	int selected_unit;
 	ActionUnit *action_array;

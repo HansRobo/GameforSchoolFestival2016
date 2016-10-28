@@ -35,12 +35,12 @@ public:
 			}
 		}
 
-		int	space = 13;
+		int	space = 20;
 		DrawBox(System.GetWindowX() / 2 - GetDrawStringWidthToHandle(str, strlen(str), font_m) / 2 - space, System.GetWindowY() / 2 - GetFontSizeToHandle(font_m) / 2 - space,
 			System.GetWindowX() / 2 + GetDrawStringWidthToHandle(str, strlen(str), font_m) / 2 + space, System.GetWindowY() / 2 + GetFontSizeToHandle(font_m) / 2 + space,
-			GetColor(255,128,128),true
+			GetColor(100,100,200),true
 			);
-		space -= 3;
+		space -= 10;
 		DrawBox(System.GetWindowX() / 2 - GetDrawStringWidthToHandle(str, strlen(str), font_m) / 2 - space, System.GetWindowY() / 2 - GetFontSizeToHandle(font_m) / 2 - space,
 			System.GetWindowX() / 2 + GetDrawStringWidthToHandle(str, strlen(str), font_m) / 2 + space, System.GetWindowY() / 2 + GetFontSizeToHandle(font_m) / 2 + space,
 			WHITE, true
