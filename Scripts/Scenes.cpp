@@ -25,7 +25,7 @@ char Action::message[256] = "";
 
 void gameMainLoop() {
 	stage.stage[stage.current_stage]->loop();
-	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);
+//	DrawCircle(stage.stage[stage.current_stage]->me.pos, 20, YELLOW, false);
 
 	if (stage.stage[stage.current_stage]->me.hp <= 0 && game_main.sceneChild == nullptr) {
 		Game.AddChild(&game_over);
@@ -106,7 +106,29 @@ void editMeLoop() {
 	manager.sort();
 
 
+	DrawFormatStringToHandle(200,50,WHITE,font_m,"ここにセットされたコマンドをAIが順番に実行していきます");
 
+	float scale = 20.0f;
+	int col = WHITE;
+	Vector2D s[5];
+	s[0] = VGet(50,80);
+	s[1] = VGet(140,80);
+	s[2] = VGet(150,90);
+	s[3] = VGet(150,200);
+	s[4] = VGet(50,200);
+	DrawLineAA( 50,120, 150, 120, col, 3);
+	for (int i = 0; i < 4;i++) {
+		DrawLineAA(s[i].x, s[i].y, s[i+1].x, s[i+1].y, col, 3);
+	}
+	DrawFormatStringToHandle(80, 90, WHITE, font_m, "自機");
+	DrawLineAA(s[4].x, s[4].y, s[0].x, s[0].y, col, 3);
+	Vector2D pos = VGet(100,160);
+	col = GetColor(50, 255, 50);
+	for (int i = 0; i < 6; i++) {
+		Vector2D s = VNorm(VGet(cos(M_PI / 3.0f*i), sin(M_PI / 3.0f*i)))*scale + pos ;
+		Vector2D e = VNorm(VGet(cos(M_PI / 3.0f*(i + 1)), sin(M_PI / 3.0f*(i + 1))))*scale + pos;
+		DrawLineAA(s.x, s.y, e.x, e.y, col, 3);
+	}
 
 }
 void upATK() {
