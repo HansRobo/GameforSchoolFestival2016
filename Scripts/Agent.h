@@ -90,9 +90,9 @@ public:
 				bullet[i].loop(scrl);
 			}
 		}
-		DrawFormatString(pos.x, pos.y - 60,M_PINK, "HP:%d", hp);
 		
-		DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
+		
+		//DrawCenterString((int)pos.x, (int)pos.y - 40, WHITE, "mode : %d", action[count%action_num].action_mode);
 	}
 	bool isValid() {
 		return (hp > 0);
@@ -111,9 +111,11 @@ public:
 			//DrawTriangleAA(v[0].x,v[0].y,v[1].x,v[1].y,v[2].x,v[1].y,BLACK,true);
 
 		}
+		DrawFormatString(pos.x + scrl.x, pos.y + scrl.y - 60, M_PINK, "HP:%d", hp);
 		
 	}
 	void drawEnemy(Vector2D scrl) {
+		DrawFormatString(pos.x + scrl.x, pos.y + scrl.y - 60, M_PINK, "HP:%d", hp);
 		DrawCircle(pos +scrl, 10, RED, true);
 	}
 	void checkBullet() {
@@ -254,7 +256,7 @@ public:
 		}
 		else
 		{
-			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle("空", strlen("空"), font_m) / 2, (int)(pos.y + size.y / 2 - DxLib::GetFontSizeToHandle(font_m) / 2), "空", GetColor(100,100,0), font_m);
+			DxLib::DrawStringToHandle((int)(pos.x + size.x / 2.0f) - GetDrawStringWidthToHandle("空", strlen("空"), font_l) / 2, (int)(pos.y + size.y / 2 - DxLib::GetFontSizeToHandle(font_l) / 2), "空", GetColor(100,100,0), font_l);
 		}
 	}
 	void reset() {
@@ -262,9 +264,9 @@ public:
 	}
 	int type;
 	Vector2D pos;
-	const Vector2D size = Vector2D(50.0f, 50.0f);
-	Vector2D anchor = Vector2D(450, 150);
-	const int space = 60;
+	const Vector2D size = Vector2D(70.0f, 70.0f);
+	Vector2D anchor = Vector2D(200, 100);
+	const int space = 80;
 	int num;
 	void setPos() {
 		pos = anchor + VGet(num*space, 0);
@@ -291,6 +293,24 @@ public:
 		action_array = nullptr;
 		selected_unit = -1;
 	}
+	void loadHiScore() {
+		FILE *fp = fopen("Assets_Y68/Data/score.txt", "r");
+		if (fp != NULL) {
+			for (int i = 0; i < STAGE_NUM;i++) {
+				fscanf(fp, "%f", &hi_score[i]);
+			}
+		}
+		fclose(fp);
+	}
+	void saveHiScore() {
+		FILE *fp = fopen("Assets_Y68/Data/score.txt", "w");
+		if (fp != NULL) {
+			for (int i = 0; i < STAGE_NUM; i++) {
+				fprintf(fp, "%f\n", hi_score[i]);
+			}
+		}
+		fclose(fp);
+	}
 	void load() {
 		FILE *fp = fopen("Assets_Y68/Data/spec.txt", "r");
 		if (fp != NULL) {
@@ -302,7 +322,7 @@ public:
 				action_array[i].setNum(i);
 				action_array[i].setPos();
 			}
-			for (int i = 0; i < ACTION_NUM; i++) {
+			/*for (int i = 0; i < ACTION_NUM; i++) {
 				int temp;
 				fscanf(fp, "%d", &temp);
 				if (temp == 0) {
@@ -311,7 +331,7 @@ public:
 				else {
 					is_action_locked[i] = false;
 				}
-			}
+			}*/
 
 			for (int i = 0; i < STAGE_NUM; i++) {
 				int temp;
@@ -328,8 +348,42 @@ public:
 			MessageBox(GetMainWindowHandle(), "データの読み込みに失敗しました", "警告", MB_OK);
 			System.Escape();
 		}
+		fclose(fp);
+		loadHiScore();
 	}
 
+	void save() {
+		FILE *fp = fopen("Assets_Y68/Data/spec.txt", "w");
+		if (fp != NULL) {
+			fprintf(fp, "%d\n%d\n", point, ACTION_NUM);
+			//for (int i = 0; i < ACTION_NUM; i++) {
+			//	if (is_action_locked[i]) {
+			//		fprintf(fp, "0 ");
+			//	}
+			//	else
+			//	{
+			//		fprintf(fp, "1 ");
+			//	}
+			//}
+			fprintf(fp, "\n");
+			for (int i = 0; i < STAGE_NUM; i++) {
+				if (is_stage_valid[i]) {
+					fprintf(fp, "1 ");
+				}
+				else
+				{
+					fprintf(fp, "0 ");
+				}
+				
+			}
+		}
+		else {
+			MessageBox(GetMainWindowHandle(), "データの保存に失敗しました", "警告", MB_OK);
+			System.Escape();
+		}
+		fclose(fp);
+		saveHiScore();
+	}
 	void reset() {
 		if (action_array != nullptr) {
 			delete action_array;
@@ -411,9 +465,9 @@ public:
 		debug.Print("青い四角へ");
 		debug.Print("ドラッグ＆ドロップ");
 		debug.Print("してください");
-		Vector2D size = VGet(50.0f,50.0f);
-		int space = 60;
-		Vector2D left_top = VGet(365,255);
+		Vector2D size = VGet(60.0f,60.0f);
+		int space = 80;
+		Vector2D left_top = VGet(165,255);
 
 		for (int i = 0; i < ACTION_NUM;i++) {
 			DrawBox(left_top.x + space*i, left_top.y, left_top.x + space*i + size.x, left_top.y + size.y , YELLOW , false);
@@ -468,11 +522,11 @@ public:
 
 		}
 		Vector2D v[5];
-		v[0] = VGet(350,340);
-		v[1] = VGet(820,340);
-		v[2] = VGet(840,360);
-		v[3] = VGet(840,420);
-		v[4] = VGet(350,420);
+		v[0] = VGet(130,380);
+		v[1] = VGet(820,380);
+		v[2] = VGet(840,400);
+		v[3] = VGet(840,460);
+		v[4] = VGet(130,460);
 		for (int i = 0; i < 4;i++) {
 			DrawLineAA(v[i].x, v[i].y, v[i + 1].x, v[i + 1].y, WHITE,3.0f);
 		}
@@ -486,27 +540,27 @@ public:
 			
 		}
 		Vector2D b[6];
-		b[0] = VGet(400,220);
-		b[1] = VGet(475,220);
-		b[2] = VGet(500,233);
-		b[3] = VGet(475,245);
-		b[4] = VGet(400,245);
-		b[5] = VGet(375,233);
+		b[0] = VGet(180,220);
+		b[1] = VGet(255,220);
+		b[2] = VGet(280,233);
+		b[3] = VGet(255,245);
+		b[4] = VGet(180,245);
+		b[5] = VGet(155,233);
 		for (int i = 0; i < 5;i++) {
 			DrawLineAA(b[i].x,b[i].y,b[i+1].x,b[i+1].y,WHITE,2.0f);
 		}
 		DrawLineAA(b[5].x, b[5].y, b[0].x, b[0].y, WHITE, 2.0f);
-		DrawStringToHandle(405,223,"コマンド",WHITE,font_m);
+		DrawStringToHandle(185,223,"コマンド",WHITE,font_m);
 	
 		Vector2D c[8];
-		c[0] = VGet(500,233);
-		c[1] = VGet(830,233);
-		c[2] = VGet(850,240);
-		c[3] = VGet(850,320);
-		c[4] = VGet(370,320);
-		c[5] = VGet(350,310);
-		c[6] = VGet(350,233);
-		c[7] = VGet(375,233);
+		c[0] = VGet(280,233);
+		c[1] = VGet(810,233);
+		c[2] = VGet(830,240);
+		c[3] = VGet(830,340);
+		c[4] = VGet(150,340);
+		c[5] = VGet(130,330);
+		c[6] = VGet(130,233);
+		c[7] = VGet(155,233);
 		for (int i = 0; i < 7; i++) {
 			DrawLineAA(c[i].x, c[i].y, c[i + 1].x, c[i + 1].y, WHITE, 2.0f);
 		}
@@ -517,11 +571,11 @@ public:
 			Vector2D vertex2 = action_array[i].pos + action_array[i].size;
 			if (Event.LMouse.GetOn(vertex1.x, vertex1.y, vertex2.x, vertex2.y)) {
 				sprintf(Action::message,"ドラッグすることで順番を入れ替えることができます");
-				DrawFormatStringToHandle(360, 380, WHITE, font_m, "右クリックでコマンドを解除できます");
+				DrawFormatStringToHandle(160, 420, WHITE, font_m, "右クリックでコマンドを解除できます");
 			}
 		}
 
-		DrawFormatStringFToHandle(360, 350, WHITE, font_m, Action::message);
+		DrawFormatStringFToHandle(160, 390, WHITE, font_m, Action::message);
 		sprintf(Action::message, "");
 	}
 	int selected_type;
@@ -531,6 +585,7 @@ public:
 	bool is_stage_valid[STAGE_NUM];
 	int action_num;
 	int selected_unit;
+	float hi_score[STAGE_NUM];
 	ActionUnit *action_array;
 
 

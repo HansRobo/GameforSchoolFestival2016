@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPreInst, LPSTR lpszCmdLine, i
 	DxLib::SetMainWindowText("the Battle of AIs");
 	System.SetWindowSize(900,600);							//ウインドウサイズを設定
 	System.SetTargetFps(60.0);								//目標のフレームレートを設定
-	System.SetLoadingGraph("SukenLibAsset/LOGO/LOGO.png");	//ローディング画面に表示する画像のアドレスを指定
+	System.SetLoadingGraph("Assets_Y68/LOGO/LOGO.png");	//ローディング画面に表示する画像のアドレスを指定
 	System.SetUseThread_Awake(false);						//void Awake()の実行をバックグラウンドで行うかどうか
 	System.SetLoadingMinimalTime(0);						//Loading画面の最低表示時間をミリ秒で設定
 	//処理設定　ここまで//////////////////////////////////////////////

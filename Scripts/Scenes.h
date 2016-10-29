@@ -24,3 +24,5 @@ void backToTitle();
 
 void gameOverLoop();
 void gameClearLoop();
+
+void howLoop();

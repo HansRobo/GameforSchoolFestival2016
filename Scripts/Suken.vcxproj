@@ -117,6 +117,7 @@
     <ClInclude Include="Alert.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Scenes.h" />
     <ClInclude Include="Stage.h" />
     <ClInclude Include="Suken.h" />
@@ -147,6 +148,12 @@
     <ProjectReference Include="stage\stage.vcxproj">
       <Project>{a74596ab-8b6a-452f-9e7d-0c5b2110821e}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

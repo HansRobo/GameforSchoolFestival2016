@@ -39,38 +39,57 @@ void gameMainLoop() {
 		}
 		if (sum == 0 && game_main.sceneChild == nullptr) {
 			Game.AddChild(&game_clear);
+			if ((stage.stage[stage.current_stage]->counter / 60.0f) < manager.hi_score[stage.current_stage]) {
+				manager.hi_score[stage.current_stage] = stage.stage[stage.current_stage]->counter / 60.0f;
+			}
+			manager.save();
+			stage.can_unlock_next = false;
+			if (stage.current_stage +1 < STAGE_NUM) {
+				if (manager.is_stage_valid[stage.current_stage + 1] == false) {
+					manager.is_stage_valid[stage.current_stage + 1] = true;
+					if ((stage.stage[stage.current_stage]->counter / 60.0f) < manager.hi_score[stage.current_stage]) {
+						manager.hi_score[stage.current_stage] = stage.stage[stage.current_stage]->counter / 60.0f;
+					}
+					manager.save();
+					manager.load();
+					stage.can_unlock_next = true;
+					
+				}
+			}
 		}
 	}
+	DrawBox(0, 570, 900 * ((float)stage.stage[stage.current_stage]->me.hp / (float)stage.stage[stage.current_stage]->me.hp_point), 600, GetColor(200, 100, 100), true);
+
 }
 
 
 void editMeLoop() {
 
-	debug.Print("stage:%d", stage.current_stage);
-	DrawFormatString(120, 50, YELLOW, "未使用ポイント : %d", manager.point);
-	DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage]->me.attack_point);
-	DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage]->me.speed_point);
-	DrawFormatString(160, 180, WHITE, "HP : %d", stage.stage[stage.current_stage]->me.hp_point);
+	//debug.Print("stage:%d", stage.current_stage);
+	//DrawFormatString(120, 50, YELLOW, "未使用ポイント : %d", manager.point);
+	//DrawFormatString(160,100,WHITE,"ATK : %d",stage.stage[stage.current_stage]->me.attack_point);
+	//DrawFormatString(160, 140, WHITE, "SPD : %d", stage.stage[stage.current_stage]->me.speed_point);
+	//DrawFormatString(160, 180, WHITE, "HP : %d", stage.stage[stage.current_stage]->me.hp_point);
 
-	float scale = 15.0f;
-	Vector2D atk, spd, hp,center;
-	center = VGet(200, 400);
-	atk = spd = hp = center;
-	atk += VGet(0.0f, -1.0f)*stage.stage[stage.current_stage]->me.attack_point*scale;
-	spd += VGet(0.866f, 0.5f)*stage.stage[stage.current_stage]->me.speed_point*scale;
-	hp += VGet(-0.866f, 0.5f)*stage.stage[stage.current_stage]->me.hp_point*scale;
+	//float scale = 15.0f;
+	//Vector2D atk, spd, hp,center;
+	//center = VGet(200, 400);
+	//atk = spd = hp = center;
+	//atk += VGet(0.0f, -1.0f)*stage.stage[stage.current_stage]->me.attack_point*scale;
+	//spd += VGet(0.866f, 0.5f)*stage.stage[stage.current_stage]->me.speed_point*scale;
+	//hp += VGet(-0.866f, 0.5f)*stage.stage[stage.current_stage]->me.hp_point*scale;
 
-	DrawLine(center,center+VGet(0,-1)*scale*10,GRAY);
-	DrawLine(center, center + VGet(0.866f, 0.5f)*scale * 10, GRAY);
-	DrawLine(center, center + VGet(-0.866f, 0.5f)*scale * 10, GRAY);
+	//DrawLine(center,center+VGet(0,-1)*scale*10,GRAY);
+	//DrawLine(center, center + VGet(0.866f, 0.5f)*scale * 10, GRAY);
+	//DrawLine(center, center + VGet(-0.866f, 0.5f)*scale * 10, GRAY);
 
-	DrawLine(atk,spd,YELLOW);
-	DrawLine(hp, spd, YELLOW);
-	DrawLine(atk, hp, YELLOW);
+	//DrawLine(atk,spd,YELLOW);
+	//DrawLine(hp, spd, YELLOW);
+	//DrawLine(atk, hp, YELLOW);
 
-	DrawCircle(atk,3,YELLOW,true);
-	DrawCircle(spd, 3, YELLOW, true);
-	DrawCircle(hp, 3, YELLOW, true);
+	//DrawCircle(atk,3,YELLOW,true);
+	//DrawCircle(spd, 3, YELLOW, true);
+	//DrawCircle(hp, 3, YELLOW, true);
 
 	//////////////////////////////////////////////
 
@@ -128,7 +147,9 @@ void downHP() {
 }
 
 void reload() {
+#ifdef DEBUG
 	stage.load();
+#endif
 }
 
 
@@ -191,6 +212,10 @@ void stageSelectLoop() {
 		}
 	}
 	else {
+		//stage.current_stage = (int)(stage.base_rad / -0.15f + 0.5f);
+		stage.base_rad = -(stage.current_stage)*0.15f +0.05f;
+		debug.Print("now:%d", stage.current_stage);
+
 		if (Event.key.GetPush(Event.key.UP)|| wheel_rot > 0 ) {
 			if (stage.current_stage + 1 < STAGE_NUM) {
 				stage.current_stage++;
@@ -203,6 +228,11 @@ void stageSelectLoop() {
 				stage.transition_mode = 1;
 				stage.count = 0;
 			}
+		}
+		else
+		{
+			
+			
 		}
 	}
 	DrawCircleAA(-800,600,1030,100,GetColor(255,255,55),true);
@@ -231,6 +261,19 @@ void stageSelectLoop() {
 		
 
 	//}
+
+		//if (Event.LMouse.GetOn(System.GetWindowX() / 2 + 180, 450, System.GetWindowX() / 2 + 380, 500)) {
+			//Vector2D c = VGet(System.GetWindowX() / 2 + 280, 475);
+			//float dist = GetDistance(c,VGet(Event.LMouse.GetX(),Event.LMouse.GetY()));
+			/*for (int i = 50; i > 0; i-=5) {
+				int cnt = (int)((System.GetFrame()+i) % 30);
+				float rate = (float)cnt / 30.0f;
+				float rad = (System.GetFrame() + i )%10;
+				int col1 = GetColor(100 + 100*sin(rad), 100 + 100 * sin(rad), 35+35 * sin(rad));
+				DrawBoxAA(System.GetWindowX() / 2 + 180 - i, 450 -i, System.GetWindowX() / 2 + 380+i, 500+i,col1,true);
+			}*/
+			
+		//}
 }
 
 void gameStart() {
@@ -263,10 +306,14 @@ void gameStart() {
 void editStart() {
 	if (manager.is_stage_valid[stage.current_stage]) {
 		manager.reset();
-
 		manager.load();
-		manager.action_num = stage.stage[stage.current_stage]->max_action_num;
+		
 		stage.load();
+		manager.action_num = stage.stage[stage.current_stage]->max_action_num;
+		
+		
+		
+		stage.stage[stage.current_stage]->me.hp_point = 10;
 		Game.AddChild(&edit_me);
 	}
 	else {
@@ -364,4 +411,47 @@ void gameClearLoop() {
 	DrawQuadrangleAA(x2, cy, x2 + w, cy, x2 - dx + w, cy - h, x2 - dx, cy - h, YELLOW, true);
 
 	DrawFormatStringFToHandle(100, 140, col, font_ll, "Congratulations!");
+
+	DrawFormatStringFToHandle(100, 300, col, font_l, "残りHP　: %d / 10",stage.stage[stage.current_stage]->me.hp);
+	DrawFormatStringFToHandle(100, 400, col, font_l, "クリア時間　: %.2f 秒",stage.stage[stage.current_stage]->counter/60.0f);
+	if (manager.hi_score[stage.current_stage] != 10000.00f) {
+		DrawFormatStringFToHandle(100, 450, col, font_l, "ハイスコア　: %.2f 秒", manager.hi_score[stage.current_stage]);
+	}
+	
+
+	if (stage.can_unlock_next) {
+		DrawCircleAA(60,520,35,50,col,true);
+		DrawStringToHandle(55,490,"!",BLACK,font_ll);
+		DrawFormatStringFToHandle(100, 500, col, font_l, "次のステージが解禁されました");
+	}
+}
+
+
+
+void howLoop() {
+	DrawLine(50, 40, 850, 40, WHITE, 8);
+	DrawFormatStringFToHandle(380, 50,YELLOW, font_l, "遊び方");
+	DrawLine(550, 60, 800, 60, WHITE, 8);
+	DrawLine(550, 80, 750, 80, WHITE, 8);
+	DrawLine(350, 60, 100, 60, WHITE, 8);
+	DrawLine(350, 80, 150, 80, WHITE, 8);
+	DrawLine(200, 100, 700, 100, WHITE, 8);
+
+	DrawFormatStringFToHandle(50, 150, WHITE, font_m, "21XX年、戦闘は全て自動化されたAIによって行われており、戦争で人間が死ぬことはなくなった。");
+	DrawFormatStringFToHandle(50, 170, WHITE, font_m, "AIの能力は日々進歩し続けているが、そんな未来においてもAIの強さというものは");
+	DrawFormatStringFToHandle(50, 190, WHITE, font_m, "依然として人間であるAIの設計者に依存している。");
+	DrawFormatStringFToHandle(50, 210, WHITE, font_m, "今日は君がそのAIの設計者となり、その手腕を存分に発揮してもらいたい");
+	DrawFormatStringFToHandle(50, 230, WHITE, font_m, "健闘を祈る...");
+	DrawBox(40,140,850,260,GetColor(150,150,0),false);
+
+	DrawFormatStringFToHandle(70, 280, WHITE, font_m, "基本操作");
+	DrawFormatStringFToHandle(100, 310, WHITE, font_m, "エンターキーで決定・進む");
+	DrawFormatStringFToHandle(100, 330, WHITE, font_m, "backspaceキーで戻る");
+	DrawFormatStringFToHandle(100, 350, WHITE, font_m, "その他ボタンなど");
+	
+	DrawFormatStringFToHandle(100, 150, WHITE, font_m, "");
+	DrawFormatStringFToHandle(100, 150, WHITE, font_m, "");
+	DrawFormatStringFToHandle(100, 150, WHITE, font_m, "");
+
+
 }

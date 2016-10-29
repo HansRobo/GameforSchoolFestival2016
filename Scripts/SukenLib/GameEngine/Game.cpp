@@ -409,11 +409,13 @@ void suken::CGame::ExecuteCommand()
 			GetCurrentScene()->SetFocus(false);
 			
 			if (commandQueue.front().second->IsMusicValid()) {
-				if (musicFront != nullptr) {
-					musicFront->StopMusic();
+				if (musicFront != commandQueue.front().second) {
+					if (musicFront != nullptr) {
+						musicFront->StopMusic();
+					}
+					musicFront = commandQueue.front().second;
+					musicFront->StartMusic();
 				}
-				musicFront = commandQueue.front().second;
-				musicFront->StartMusic();
 			}
 			
 			commandQueue.front().second->SetFocus(true);

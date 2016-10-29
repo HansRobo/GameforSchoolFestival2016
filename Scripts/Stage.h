@@ -8,6 +8,7 @@ public:
 
 		result_counter = 0;
 		scroll = VGet(0, 0);
+		counter = 0;
 	}
 	void load(int stage_num) {
 		enemy.clear();
@@ -15,6 +16,16 @@ public:
 		sprintf(file_name,"Assets_Y68/Data/stage%d.txt",stage_num);
 		FILE *fp = fopen(file_name, "r");
 		if (fp != NULL) {
+			for (int i = 0; i < ACTION_NUM; i++) {
+				int temp;
+				fscanf(fp, "%d", &temp);
+				if (temp == 0) {
+					manager.is_action_locked[i] = true;
+				}
+				else {
+					manager.is_action_locked[i] = false;
+				}
+			}
 			fscanf(fp, "%d", &max_action_num);
 			me.setActionNum(max_action_num);
 
@@ -59,6 +70,7 @@ public:
 		}
 	}
 	void loop() {
+		counter++;
 		drawGrid();
 		actMe();
 		actEnemy();
@@ -110,6 +122,7 @@ public:
 	vector<Agent> enemy;
 	int result_counter;
 	Vector2D scroll;
+	int counter;
 };
 
 class StageManager {
@@ -131,6 +144,7 @@ public:
 	int count;
 	const int animation_time = 20;
 	float base_rad;
+	bool can_unlock_next;
 	
 };
 
