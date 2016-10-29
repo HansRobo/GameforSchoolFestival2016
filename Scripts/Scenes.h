@@ -26,3 +26,7 @@ void gameOverLoop();
 void gameClearLoop();
 
 void howLoop();
+
+void backToSelect();
+
+void selectStart();

@@ -130,6 +130,13 @@ void editMeLoop() {
 		DrawLineAA(s.x, s.y, e.x, e.y, col, 3);
 	}
 
+	if (Event.key.GetDown(Event.key.RETURN)) {
+		gameStart();
+	}
+	if (Event.key.GetDown(Event.key.BACK)) {
+		selectStart();
+	}
+
 }
 void upATK() {
 	if(manager.point > 0){
@@ -296,9 +303,20 @@ void stageSelectLoop() {
 			}*/
 			
 		//}
+		//Event.Loop();
+		if (Event.LMouse.GetClick(System.GetWindowX() / 2 + 180, 450, System.GetWindowX() / 2 + 380, 500)) {
+			editStart();
+		}
+		if (Event.key.GetDown(Event.key.RETURN)) {
+			editStart();
+		}
+		if (Event.key.GetDown(Event.key.BACK)) {
+			backToTitle();
+		}
 }
 
 void gameStart() {
+	
 	int front_num = 0;
 	for (int i = 0; i < manager.action_num;i++) {
 		for (int j = 0; j < manager.action_num;j++) {
@@ -323,6 +341,11 @@ void gameStart() {
 	else {
 		Game.AddChild(&game_main);
 	}
+	while (!Event.key.GetUp(Event.key.RETURN)) {
+		ProcessMessage();
+		Event.Loop();
+		Sleep(10);
+	}
 }
 
 void editStart() {
@@ -332,9 +355,7 @@ void editStart() {
 		
 		stage.load();
 		manager.action_num = stage.stage[stage.current_stage]->max_action_num;
-		
-		
-		
+	
 		stage.stage[stage.current_stage]->me.hp_point = 10;
 		Game.AddChild(&edit_me);
 	}
@@ -343,9 +364,16 @@ void editStart() {
 		sk_alert.count = 60;
 		sk_alert.message();
 	}
+	/*while (!Event.key.GetUp(Event.key.RETURN)) {
+		ProcessMessage();
+		Event.Loop();
+		Sleep(10);
+	}*/
+	
 }
 
 void backToTitle() {
+	Event.Loop();
 	sk_alert.count = 60;
 	sprintf(sk_alert.str,"ƒ^ƒCƒgƒ‹‰æ–Ê‚É–ß‚è‚Ü‚·");
 	sk_alert.scene = &title;
@@ -476,4 +504,14 @@ void howLoop() {
 	DrawFormatStringFToHandle(100, 150, WHITE, font_m, "");
 
 
+}
+
+void backToSelect() {
+	Event.Loop();
+	Game.AddChild(&stage_select);
+}
+
+void selectStart() {
+	Event.Loop();
+	Game.AddChild(&stage_select);
 }
